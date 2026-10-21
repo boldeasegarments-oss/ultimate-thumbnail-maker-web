@@ -303,34 +303,34 @@ function initThumbnailStudio() {
     gaming: {
       headline: 'EPIC BOSS DEFEATED!',
       badge: '100% UNLOCKED',
-      badgeColor: '#ef4444',
-      bgImage: "url('/assets/templates/gaming-hardcore.webp')",
-      textColor: '#ffeb3b',
-      textShadow: '3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 0 4px 18px rgba(255, 235, 59, 0.6)'
+      badgeColor: '#EF4444',
+      bgImage: "url('/assets/templates/studio-bg-gaming.webp')",
+      textColor: '#FFEA00',
+      textShadow: '3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 0 8px 25px rgba(255, 234, 0, 0.5)'
     },
     youtube: {
-      headline: 'I SPENT 100 HOURS HERE',
-      badge: 'VIRAL VLOG',
-      badgeColor: '#e11d48',
-      bgImage: "url('/assets/templates/vlog-travel.webp')",
-      textColor: '#ffffff',
-      textShadow: '3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 0 4px 18px rgba(244, 63, 94, 0.6)'
+      headline: 'I LOST EVERYTHING HERE',
+      badge: 'SECRET LOCATION',
+      badgeColor: '#E11D48',
+      bgImage: "url('/assets/templates/studio-bg-vlog.webp')",
+      textColor: '#FFFFFF',
+      textShadow: '3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 0 8px 25px rgba(0, 0, 0, 0.85)'
     },
     tech: {
       headline: "DON'T BUY THIS YET!",
-      badge: 'ULTIMATE REVIEW',
-      badgeColor: '#059669',
-      bgImage: "url('/assets/templates/tech-review.webp')",
-      textColor: '#34d399',
-      textShadow: '3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 0 4px 18px rgba(52, 211, 153, 0.6)'
+      badge: 'THE BRUTAL TRUTH',
+      badgeColor: '#0284C7',
+      bgImage: "url('/assets/templates/studio-bg-tech.webp')",
+      textColor: '#38BDF8',
+      textShadow: '3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 0 8px 25px rgba(56, 189, 248, 0.6)'
     },
     tutorial: {
-      headline: 'PRO MASTERCLASS 2026',
-      badge: 'STEP-BY-STEP',
-      badgeColor: '#7c3aed',
-      bgImage: "url('/assets/templates/pro-editor.webp')",
-      textColor: '#f0abfc',
-      textShadow: '3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 0 4px 18px rgba(192, 132, 252, 0.6)'
+      headline: 'THIS CHANGES EVERYTHING',
+      badge: 'MASTERCLASS 2026',
+      badgeColor: '#8B5CF6',
+      bgImage: "url('/assets/templates/studio-bg-tutorial.webp')",
+      textColor: '#FCD34D',
+      textShadow: '3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 0 8px 25px rgba(252, 211, 77, 0.6)'
     }
   };
 

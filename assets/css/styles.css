@@ -1434,13 +1434,18 @@ body:not(:has(.ark-hero)) .mobile-toggle,
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  padding-right: 10%;
+  padding-right: 4%;
+  pointer-events: none;
 }
 
 .studio-subject-img {
-  width: 45%;
-  height: auto;
-  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6));
+  height: 94%;
+  width: auto;
+  max-width: 48%;
+  object-fit: contain;
+  object-position: bottom right;
+  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.75));
+  display: block;
 }
 
 .studio-layer--text {
@@ -1449,15 +1454,17 @@ body:not(:has(.ark-hero)) .mobile-toggle,
   justify-content: center;
   align-items: flex-start;
   padding-left: 8%;
-  gap: 0.5rem;
+  padding-right: 40%;
+  gap: 0.65rem;
+  pointer-events: none;
 }
 
 .studio-headline {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  font-size: clamp(1.8rem, 4.2vw, 3.4rem);
   color: #FFEA00;
-  text-shadow: 3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 0 8px 25px rgba(255, 234, 0, 0.5);
-  letter-spacing: 0.04em;
+  text-shadow: 3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 0 8px 25px rgba(0, 0, 0, 0.85);
+  letter-spacing: 0.03em;
   line-height: 0.95;
 }
 
@@ -1469,7 +1476,7 @@ body:not(:has(.ark-hero)) .mobile-toggle,
   padding: 4px 12px;
   border-radius: 4px;
   letter-spacing: 0.05em;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
 
 /* 3D Exploded Layer Mode */
