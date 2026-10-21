@@ -22,7 +22,8 @@
   <meta name="twitter:image" content="https://ultimatethumbnailmaker.pages.dev/assets/images/og-image.webp">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/images/app-icon.png">
   
   <!-- Stylesheet -->
   <link rel="stylesheet" href="/assets/css/styles.css">
@@ -46,7 +47,7 @@
   <header class="site-header">
     <div class="container nav-container">
       <a href="/" class="brand" aria-label="Ultimate Thumbnail Maker Home">
-        <img src="/assets/images/favicon.svg" alt="Ultimate Thumbnail Maker Logo" class="brand-icon" width="36" height="36">
+        <img src="/assets/images/app-icon.png" alt="Ultimate Thumbnail Maker App Icon" class="brand-icon" width="36" height="36">
         <span class="brand-text">
           <span class="brand-title">Ultimate Thumbnail</span>
           <span class="brand-subtitle">Android App</span>
@@ -84,17 +85,24 @@
   <main id="main-content">
     <!-- Hero Section -->
     <section class="hero">
+      <div class="ambient-glow-wrapper" aria-hidden="true">
+        <div class="ambient-orb ambient-orb--indigo"></div>
+        <div class="ambient-orb ambient-orb--cyan"></div>
+        <div class="ambient-orb ambient-orb--purple"></div>
+      </div>
+
       <div class="container hero-grid">
         <div class="hero-content">
           <div class="badge-pill badge-pill--accent">
-            <span>Android App • com.sk.thumbnailmaker</span>
+            <img src="/assets/images/app-icon.png" alt="Thumbnail Maker Icon" class="badge-icon-inline" width="20" height="20">
+            <span>Official Android App • com.sk.thumbnailmaker</span>
           </div>
           <h1>Ultimate Thumbnail Maker for Android</h1>
           <p class="hero-lead">
-            Create and customize thumbnail designs for YouTube videos, gaming content, and other creator projects with Ultimate Thumbnail Maker for Android.
+            Create high-impact, click-worthy thumbnail designs for YouTube videos, gaming streams, and creator projects with real Android tools.
           </p>
           <p>
-            Start with ready-made templates, customize text using fonts and effects, add stickers and graphic elements, and use background removal when you want a subject to stand out.
+            Start with ready-made 1280x720 templates, customize text using 50+ fonts and neon glow effects, add stickers and graphic elements, and use background removal with zero ad clutter.
           </p>
           <div class="hero-actions">
             <a href="https://play.google.com/store/apps/details?id=com.sk.thumbnailmaker" 
@@ -107,8 +115,8 @@
               </svg>
               <span>Download on Google Play</span>
             </a>
-            <a href="/how-to-make-a-youtube-thumbnail/" class="btn btn-secondary">
-              <span>Read Tutorial</span>
+            <a href="#thumbnail-studio" class="btn btn-secondary">
+              <span>Try Live Studio</span>
             </a>
           </div>
           <div class="meta-details">
@@ -133,19 +141,121 @@
           </div>
         </div>
 
-        <div class="hero-media">
-          <figure class="showcase-frame">
-            <img src="/assets/images/app-home.webp" 
-                 alt="Ultimate Thumbnail Maker template browser interface preview" 
-                 width="800" 
-                 height="600" 
-                 loading="eager" 
-                 fetchpriority="high">
+        <div class="hero-media card-3d-wrap">
+          <figure class="showcase-frame card-3d" data-tilt data-tilt-max="10">
+            <div class="card-3d-inner">
+              <img src="/assets/images/app-home.webp" 
+                   alt="Ultimate Thumbnail Maker template browser interface preview" 
+                   width="800" 
+                   height="600" 
+                   loading="eager" 
+                   fetchpriority="high">
+              <div class="card-3d-glare"></div>
+            </div>
             <figcaption class="showcase-caption">
               <span>App Interface: Template Browser</span>
               <span>Android</span>
             </figcaption>
           </figure>
+
+          <!-- Floating 3D Micro-Badges -->
+          <div class="floating-badge floating-badge--top-left">
+            <span class="badge-dot pulse-emerald"></span>
+            <span>100% Ad-Free Canvas</span>
+          </div>
+          <div class="floating-badge floating-badge--bottom-right">
+            <span class="badge-dot pulse-cyan"></span>
+            <span>Auto Background Cutout</span>
+          </div>
+          <div class="floating-badge floating-badge--bottom-left">
+            <img src="/assets/images/app-icon.png" alt="App Icon" class="badge-icon-inline" width="18" height="18">
+            <span>Official Android App</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive 3D Thumbnail Studio Sandbox -->
+    <section class="studio-section" id="thumbnail-studio" aria-label="Interactive Thumbnail Studio Playground">
+      <div class="container">
+        <div class="badge-pill badge-pill--accent">
+          <span>Interactive Browser Playground</span>
+        </div>
+        <h2>Test the Creator Studio Live</h2>
+        <p>Experiment with real thumbnail layouts directly in your browser. Switch creator genres, edit live typography, and toggle into the 3D isometric layer explosion view to inspect how pro thumbnails are composited.</p>
+
+        <div class="studio-grid">
+          <!-- Controls Panel -->
+          <div class="studio-controls">
+            <!-- Category Tabs -->
+            <div class="studio-control-group">
+              <span class="studio-control-label">1. Choose Creator Genre</span>
+              <div class="studio-tabs" role="tablist" aria-label="Genre Presets">
+                <button type="button" class="studio-tab-btn is-active" data-theme="gaming" role="tab" aria-selected="true">
+                  <span>🎮 Gaming Stream</span>
+                </button>
+                <button type="button" class="studio-tab-btn" data-theme="youtube" role="tab" aria-selected="false">
+                  <span>🎥 Viral Vlog</span>
+                </button>
+                <button type="button" class="studio-tab-btn" data-theme="tech" role="tab" aria-selected="false">
+                  <span>⚡ Tech Review</span>
+                </button>
+                <button type="button" class="studio-tab-btn" data-theme="tutorial" role="tab" aria-selected="false">
+                  <span>🚀 Pro Tutorial</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Custom Headline Input -->
+            <div class="studio-control-group">
+              <label for="studio-headline-input" class="studio-control-label">2. Custom Headline Text</label>
+              <input type="text" id="studio-headline-input" class="studio-input" value="EPIC BOSS DEFEATED!" maxlength="40" aria-label="Edit thumbnail headline">
+            </div>
+
+            <!-- Typography & Style Pills -->
+            <div class="studio-control-group">
+              <span class="studio-control-label">3. Font &amp; Letter Styling</span>
+              <div class="studio-style-pills">
+                <button type="button" class="studio-pill-btn is-active" data-style="impact">Bold Impact</button>
+                <button type="button" class="studio-pill-btn" data-style="italic">High Speed Italic</button>
+                <button type="button" class="studio-pill-btn" data-style="cyber">Cyber Wide</button>
+              </div>
+            </div>
+
+            <!-- 3D Layer Explosion Toggle Button -->
+            <button type="button" class="studio-toggle-3d" id="btn-toggle-3d" aria-label="Toggle 3D isometric exploded view">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+              </svg>
+              <span class="btn-label-text">Toggle 3D Exploded View</span>
+            </button>
+          </div>
+
+          <!-- 3D Interactive Stage -->
+          <div class="studio-stage">
+            <div class="studio-canvas card-3d" data-tilt data-tilt-max="14" aria-label="Live interactive thumbnail preview">
+              <!-- Layer 1: Background -->
+              <div class="studio-layer studio-layer--bg">
+                <span class="layer-depth-pill">Layer 1: Background Canvas</span>
+              </div>
+              <!-- Layer 2: Graphic Overlay Streaks -->
+              <div class="studio-layer studio-layer--overlay">
+                <span class="layer-depth-pill">Layer 2: Graphic Grid</span>
+              </div>
+              <!-- Layer 3: Subject Cutout -->
+              <div class="studio-layer studio-layer--subject">
+                <span class="layer-depth-pill">Layer 3: Auto Cutout</span>
+                <div class="studio-subject-silhouette" aria-hidden="true"></div>
+              </div>
+              <!-- Layer 4: Bold Typography & Sticker -->
+              <div class="studio-layer studio-layer--text">
+                <span class="layer-depth-pill">Layer 4: Typography</span>
+                <span class="studio-headline">EPIC BOSS DEFEATED!</span>
+                <span class="studio-badge-tag">100% UNLOCKED</span>
+              </div>
+              <div class="card-3d-glare"></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -157,7 +267,7 @@
         <p>Explore how Ultimate Thumbnail Maker helps you design covers across formats and genres.</p>
 
         <div class="grid-2">
-          <article class="card">
+          <article class="card card-3d" data-tilt data-tilt-max="8">
             <div class="card-icon">
               <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -171,9 +281,10 @@
               <span>Learn about YouTube thumbnails</span>
               <span aria-hidden="true">&rarr;</span>
             </a>
+            <div class="card-3d-glare"></div>
           </article>
 
-          <article class="card">
+          <article class="card card-3d" data-tilt data-tilt-max="8">
             <div class="card-icon">
               <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
@@ -187,9 +298,10 @@
               <span>Learn about gaming thumbnails</span>
               <span aria-hidden="true">&rarr;</span>
             </a>
+            <div class="card-3d-glare"></div>
           </article>
 
-          <article class="card">
+          <article class="card card-3d" data-tilt data-tilt-max="8">
             <div class="card-icon">
               <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -203,9 +315,10 @@
               <span>View the step-by-step tutorial</span>
               <span aria-hidden="true">&rarr;</span>
             </a>
+            <div class="card-3d-glare"></div>
           </article>
 
-          <article class="card">
+          <article class="card card-3d" data-tilt data-tilt-max="8">
             <div class="card-icon">
               <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -219,7 +332,56 @@
               <span>Guide to background removal</span>
               <span aria-hidden="true">&rarr;</span>
             </a>
+            <div class="card-3d-glare"></div>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Background Cutout Comparison Slider -->
+    <section class="comparison-section" id="cutout-comparison" aria-label="Interactive Cutout Comparison Slider">
+      <div class="container">
+        <div class="badge-pill badge-pill--accent">
+          <span>Precision Tool Preview</span>
+        </div>
+        <h2>Instant Subject Cutouts: Drag to Compare</h2>
+        <p>See how the Android app isolates creators and game subjects from cluttered backgrounds to create high-contrast YouTube thumbnails.</p>
+
+        <div class="compare-slider-card">
+          <div class="compare-slider-wrap" role="slider" aria-label="Interactive before and after cutout comparison" aria-valuenow="50" aria-valuemin="5" aria-valuemax="95" tabindex="0">
+            <!-- Background Image: After (Isolated Cutout composited on vibrant thumbnail canvas) -->
+            <img src="/assets/images/background-removal-example.webp" 
+                 alt="After: Clean cutout composited onto a high-contrast thumbnail background" 
+                 class="compare-img compare-before" 
+                 width="800" 
+                 height="450" 
+                 loading="lazy">
+
+            <!-- Foreground Overlaid Image: Before (Original cluttered room photo) -->
+            <div class="compare-after-wrap">
+              <img src="/assets/images/background-removal-example.webp" 
+                   alt="Before: Original photo with distracting room background" 
+                   class="compare-img" 
+                   width="800" 
+                   height="450" 
+                   loading="lazy">
+              <span class="compare-label compare-label--after">BEFORE: ORIGINAL</span>
+            </div>
+
+            <!-- Floating Draggable Handle -->
+            <div class="compare-handle" aria-hidden="true">&harr;</div>
+            <span class="compare-label compare-label--before">AFTER: CUTOUT</span>
+          </div>
+
+          <div class="compare-meta-bar">
+            <span class="compare-tip">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+              </svg>
+              <span>Click or drag the slider handle horizontally to compare</span>
+            </span>
+            <span>Offset cursor brush (0-300px) &amp; Auto Threshold (0-80)</span>
+          </div>
         </div>
       </div>
     </section>
@@ -432,7 +594,7 @@
     <div class="container footer-grid">
       <div class="footer-brand">
         <div class="brand">
-          <img src="/assets/images/favicon.svg" alt="Ultimate Thumbnail Maker Logo" class="brand-icon" width="28" height="28">
+          <img src="/assets/images/app-icon.png" alt="Ultimate Thumbnail Maker App Icon" class="brand-icon" width="28" height="28">
           <span class="brand-title">Ultimate Thumbnail</span>
         </div>
         <p>Informational guide and design resources for Ultimate Thumbnail Maker for Android (package: <code>com.sk.thumbnailmaker</code>).</p>

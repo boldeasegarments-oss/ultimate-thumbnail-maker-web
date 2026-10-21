@@ -21,7 +21,8 @@
   <meta name="twitter:description" content="Learn how to create YouTube thumbnails on Android with templates, custom text, fonts, effects, stickers, and background removal.">
   <meta name="twitter:image" content="https://ultimatethumbnailmaker.pages.dev/assets/images/thumbnail-editor.webp">
   
-  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/images/app-icon.png">
   <link rel="stylesheet" href="/assets/css/styles.css">
 </head>
 <body>
@@ -31,7 +32,7 @@
   <header class="site-header">
     <div class="container nav-container">
       <a href="/" class="brand" aria-label="Ultimate Thumbnail Maker Home">
-        <img src="/assets/images/favicon.svg" alt="Ultimate Thumbnail Maker Logo" class="brand-icon" width="36" height="36">
+        <img src="/assets/images/app-icon.png" alt="Ultimate Thumbnail Maker App Icon" class="brand-icon" width="36" height="36">
         <span class="brand-text">
           <span class="brand-title">Ultimate Thumbnail</span>
           <span class="brand-subtitle">Android App</span>
@@ -78,9 +79,15 @@
 
   <main id="main-content">
     <section class="hero">
+      <div class="ambient-glow-wrapper" aria-hidden="true">
+        <div class="ambient-orb ambient-orb--indigo"></div>
+        <div class="ambient-orb ambient-orb--cyan"></div>
+      </div>
+
       <div class="container hero-grid">
         <div class="hero-content">
           <div class="badge-pill badge-pill--accent">
+            <img src="/assets/images/app-icon.png" alt="App Icon" class="badge-icon-inline" width="20" height="20">
             <span>Creator Focus • YouTube Video Covers</span>
           </div>
           <h1>Create YouTube Thumbnails on Android</h1>
@@ -104,19 +111,32 @@
           </div>
         </div>
 
-        <div class="hero-media">
-          <figure class="showcase-frame">
-            <img src="/assets/images/thumbnail-editor.webp" 
-                 alt="Editing canvas interface with text, font tools, and stickers" 
-                 width="800" 
-                 height="600" 
-                 loading="eager" 
-                 fetchpriority="high">
+        <div class="hero-media card-3d-wrap">
+          <figure class="showcase-frame card-3d" data-tilt data-tilt-max="10">
+            <div class="card-3d-inner">
+              <img src="/assets/images/thumbnail-editor.webp" 
+                   alt="Editing canvas interface with text, font tools, and stickers" 
+                   width="800" 
+                   height="600" 
+                   loading="eager" 
+                   fetchpriority="high">
+              <div class="card-3d-glare"></div>
+            </div>
             <figcaption class="showcase-caption">
               <span>Editor Canvas: Fonts, Text &amp; Sticker Tools</span>
               <span>16:9 Landscape Layout</span>
             </figcaption>
           </figure>
+
+          <!-- Floating 3D Micro-Badges -->
+          <div class="floating-badge floating-badge--top-left">
+            <span class="badge-dot pulse-emerald"></span>
+            <span>50+ Pro Fonts</span>
+          </div>
+          <div class="floating-badge floating-badge--bottom-right">
+            <span class="badge-dot pulse-cyan"></span>
+            <span>1280x720 HD Canvas</span>
+          </div>
         </div>
       </div>
     </section>
@@ -370,7 +390,7 @@
     <div class="container footer-grid">
       <div class="footer-brand">
         <div class="brand">
-          <img src="/assets/images/favicon.svg" alt="Ultimate Thumbnail Maker Logo" class="brand-icon" width="28" height="28">
+          <img src="/assets/images/app-icon.png" alt="Ultimate Thumbnail Maker App Icon" class="brand-icon" width="28" height="28">
           <span class="brand-title">Ultimate Thumbnail</span>
         </div>
         <p>Practical thumbnail design tools and guides for Android creators (package: <code>com.sk.thumbnailmaker</code>).</p>
