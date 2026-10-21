@@ -9,6 +9,7 @@ RES_DRAWABLE = os.path.join(APP_DIR, "res", "drawable")
 RES_NODPI = os.path.join(APP_DIR, "res", "drawable-nodpi")
 FONT_NUNITO_PATH = os.path.join(APP_DIR, "res", "font", "nunitobold.ttf")
 FONT_BEBAS_PATH = os.path.join(APP_DIR, "assets", "font", "BebasNeue Bold.ttf")
+REAL_THUMB_DIR = "scratch/real_16_9_templates"
 
 # Load Fonts
 FONT_TITLE = ImageFont.truetype(FONT_NUNITO_PATH, 28)
@@ -22,27 +23,59 @@ FONT_BEBAS_LG = ImageFont.truetype(FONT_BEBAS_PATH, 36)
 FONT_BEBAS_MD = ImageFont.truetype(FONT_BEBAS_PATH, 26)
 FONT_BEBAS_SM = ImageFont.truetype(FONT_BEBAS_PATH, 20)
 
-# Colors
+# Colors matching real app
 COLOR_BG = (33, 32, 41)          # #212029 (Real App Background)
 COLOR_BAR = (47, 45, 58)         # #2F2D3A (Real App Action/Top Bar)
 COLOR_BAR_BORDER = (58, 55, 72)  # Subtle divider
 COLOR_ACCENT = (14, 172, 255)    # #0EACFF (Real App Active Cyan/Blue)
-COLOR_ACCENT_ALT = (0, 209, 143) # Emerald highlight
 COLOR_TEXT = (255, 255, 255)
 COLOR_TEXT_MUTED = (156, 163, 175)
 COLOR_CARD_BG = (42, 40, 52)
+
+# Real 16:9 thumbnail templates extracted directly from app cache
+REAL_THUMBS_FEED = [
+    "real_thumb_15_960x540.jpg",
+    "real_thumb_8_960x540.jpg",
+    "real_thumb_36_960x540.jpg",
+    "real_thumb_37_960x540.jpg",
+    "real_thumb_3_706x397.jpg",
+    "real_thumb_10_706x397.jpg",
+    "real_thumb_14_706x397.jpg",
+    "real_thumb_16_706x397.jpg",
+    "real_thumb_28_706x397.jpg",
+    "real_thumb_30_706x397.jpg"
+]
+
+REAL_THUMBS_TEMPLATES = [
+    "real_thumb_34_706x397.jpg",
+    "real_thumb_21_706x397.jpg",
+    "real_thumb_23_706x397.jpg",
+    "real_thumb_4_500x281.jpg",
+    "real_thumb_11_500x281.jpg",
+    "real_thumb_12_500x281.jpg",
+    "real_thumb_27_500x281.jpg",
+    "real_thumb_9_500x281.jpg",
+    "real_thumb_35_500x281.jpg",
+    "real_thumb_24_500x281.jpg"
+]
 
 def load_app_drawable(filename, size=None):
     path = os.path.join(RES_NODPI, filename)
     if not os.path.exists(path):
         path = os.path.join(RES_DRAWABLE, filename)
     if not os.path.exists(path):
-        print(f"Warning: {filename} not found")
         return None
     im = Image.open(path).convert("RGBA")
     if size:
         im = im.resize(size, Image.Resampling.LANCZOS)
     return im
+
+def load_real_thumb(filename, w=330, h=186):
+    p = os.path.join(REAL_THUMB_DIR, filename)
+    if os.path.exists(p):
+        return Image.open(p).convert("RGB").resize((w, h), Image.Resampling.LANCZOS)
+    # Fallback to solid color if missing
+    return Image.new("RGB", (w, h), (50, 48, 60))
 
 def draw_status_bar(draw, dark=False):
     text_color = (255, 255, 255) if not dark else (20, 20, 20)
@@ -97,135 +130,9 @@ def draw_bottom_dock(img, draw, active_idx=0):
     draw.rectangle((0, H - 25, W, H), fill=(20, 19, 25))
     draw.rounded_rectangle((W//2 - 60, H - 15, W//2 + 60, H - 9), radius=3, fill=(100, 100, 110))
 
-# -------------------------------------------------------------
-# Rich Thumbnail Generators (16:9 ratio, 325 x 183 px)
-# -------------------------------------------------------------
-def create_gaming_thumb(w=325, h=183):
-    thumb = Image.new("RGBA", (w, h), (15, 12, 35, 255))
-    d = ImageDraw.Draw(thumb)
-    # Background neon mesh
-    for y in range(h):
-        r = int(25 + 50 * (y / h))
-        g = int(10 + 30 * (1 - y / h))
-        b = int(70 + 80 * (y / h))
-        d.line((0, y, w, y), fill=(r, g, b, 255))
-    # Tech lines
-    d.polygon([(w - 120, 0), (w, 0), (w, h), (w - 60, h)], fill=(40, 20, 90, 200))
-    d.line((w - 120, 0, w - 60, h), fill=(0, 240, 255), width=3)
-    # Text
-    d.text((15, 20), "CYBERPUNK", fill=(255, 220, 0), font=FONT_BEBAS_LG)
-    d.text((15, 65), "RAY TRACING 4K", fill=(255, 255, 255), font=FONT_BEBAS_MD)
-    # Badge
-    d.rounded_rectangle((15, 130, 95, 160), radius=6, fill=(255, 0, 85))
-    d.text((25, 134), "60 FPS", fill=(255, 255, 255), font=FONT_BEBAS_SM)
-    # Time badge
-    d.rounded_rectangle((w - 70, h - 35, w - 10, h - 10), radius=4, fill=(0, 0, 0, 200))
-    d.text((w - 62, h - 32), "14:28", fill=(255, 255, 255), font=FONT_SM)
-    return thumb
-
-def create_fitness_thumb(w=325, h=183):
-    thumb = Image.new("RGBA", (w, h), (30, 25, 20, 255))
-    d = ImageDraw.Draw(thumb)
-    for y in range(h):
-        r = int(80 + 120 * (1 - y / h))
-        g = int(35 + 40 * (y / h))
-        b = int(10 + 10 * (y / h))
-        d.line((0, y, w, y), fill=(r, g, b, 255))
-    # Diagonal energy stripe
-    d.polygon([(0, 0), (80, 0), (140, h), (0, h)], fill=(255, 80, 0, 180))
-    d.text((15, 18), "10-MIN HIIT", fill=(255, 255, 255), font=FONT_BEBAS_LG)
-    d.text((15, 65), "BURN FAT FAST", fill=(255, 220, 0), font=FONT_BEBAS_MD)
-    # Badge
-    d.rounded_rectangle((15, 130, 120, 160), radius=6, fill=(0, 0, 0, 200))
-    d.text((22, 134), "NO EQUIPMENT", fill=(0, 255, 180), font=FONT_BEBAS_SM)
-    # Time badge
-    d.rounded_rectangle((w - 70, h - 35, w - 10, h - 10), radius=4, fill=(0, 0, 0, 200))
-    d.text((w - 62, h - 32), "10:00", fill=(255, 255, 255), font=FONT_SM)
-    return thumb
-
-def create_growth_thumb(w=325, h=183):
-    thumb = Image.new("RGBA", (w, h), (15, 23, 42, 255))
-    d = ImageDraw.Draw(thumb)
-    for y in range(h):
-        r = int(15 + 20 * (y / h))
-        g = int(30 + 60 * (y / h))
-        b = int(60 + 90 * (y / h))
-        d.line((0, y, w, y), fill=(r, g, b, 255))
-    # Upward green growth chart line
-    points = [(20, 140), (80, 125), (150, 95), (220, 60), (300, 25)]
-    d.line(points, fill=(16, 185, 129), width=5)
-    for p in points:
-        d.ellipse((p[0]-6, p[1]-6, p[0]+6, p[1]+6), fill=(52, 211, 153), outline=(255, 255, 255), width=2)
-    d.text((15, 18), "0 TO 100K", fill=(255, 255, 255), font=FONT_BEBAS_LG)
-    d.text((15, 65), "SUBSCRIBERS", fill=(239, 68, 68), font=FONT_BEBAS_MD)
-    # Badge
-    d.rounded_rectangle((15, 130, 110, 160), radius=6, fill=(16, 185, 129))
-    d.text((22, 134), "+340% GROWTH", fill=(255, 255, 255), font=FONT_BEBAS_SM)
-    d.rounded_rectangle((w - 70, h - 35, w - 10, h - 10), radius=4, fill=(0, 0, 0, 200))
-    d.text((w - 62, h - 32), "18:45", fill=(255, 255, 255), font=FONT_SM)
-    return thumb
-
-def create_podcast_thumb(w=325, h=183):
-    thumb = Image.new("RGBA", (w, h), (20, 15, 30, 255))
-    d = ImageDraw.Draw(thumb)
-    for y in range(h):
-        r = int(40 + 70 * (1 - y / h))
-        g = int(20 + 30 * (y / h))
-        b = int(60 + 80 * (y / h))
-        d.line((0, y, w, y), fill=(r, g, b, 255))
-    # Soundwave bars
-    for i, bh in enumerate([30, 55, 80, 45, 95, 110, 75, 40, 90, 60, 30]):
-        bx = w - 140 + i * 11
-        d.rounded_rectangle((bx, 90 - bh//2, bx + 6, 90 + bh//2), radius=3, fill=(168, 85, 247))
-    d.text((15, 18), "THE FUTURE", fill=(255, 255, 255), font=FONT_BEBAS_LG)
-    d.text((15, 65), "OF CREATIVE AI", fill=(192, 132, 252), font=FONT_BEBAS_MD)
-    d.rounded_rectangle((15, 130, 95, 160), radius=6, fill=(147, 51, 234))
-    d.text((22, 134), "EPISODE 42", fill=(255, 255, 255), font=FONT_BEBAS_SM)
-    d.rounded_rectangle((w - 70, h - 35, w - 10, h - 10), radius=4, fill=(0, 0, 0, 200))
-    d.text((w - 62, h - 32), "45:12", fill=(255, 255, 255), font=FONT_SM)
-    return thumb
-
-def create_cinematic_thumb(w=325, h=183):
-    thumb = Image.new("RGBA", (w, h), (10, 15, 25, 255))
-    d = ImageDraw.Draw(thumb)
-    for y in range(h):
-        r = int(10 + 30 * (y / h))
-        g = int(20 + 40 * (y / h))
-        b = int(40 + 70 * (y / h))
-        d.line((0, y, w, y), fill=(r, g, b, 255))
-    # Bokeh circles
-    d.ellipse((w - 110, 20, w - 30, 100), fill=(255, 180, 0, 50))
-    d.ellipse((w - 80, 60, w - 10, 130), fill=(0, 200, 255, 40))
-    d.text((15, 18), "CINEMATIC", fill=(255, 255, 255), font=FONT_BEBAS_LG)
-    d.text((15, 65), "COLOR GRADING", fill=(56, 189, 248), font=FONT_BEBAS_MD)
-    d.rounded_rectangle((15, 130, 80, 160), radius=6, fill=(14, 165, 233))
-    d.text((25, 134), "4K HDR", fill=(255, 255, 255), font=FONT_BEBAS_SM)
-    d.rounded_rectangle((w - 70, h - 35, w - 10, h - 10), radius=4, fill=(0, 0, 0, 200))
-    d.text((w - 62, h - 32), "22:10", fill=(255, 255, 255), font=FONT_SM)
-    return thumb
-
-def create_car_thumb(w=325, h=183):
-    thumb = Image.new("RGBA", (w, h), (20, 20, 25, 255))
-    d = ImageDraw.Draw(thumb)
-    for y in range(h):
-        r = int(30 + 40 * (1 - y / h))
-        g = int(25 + 30 * (1 - y / h))
-        b = int(35 + 40 * (y / h))
-        d.line((0, y, w, y), fill=(r, g, b, 255))
-    # Speed light trails
-    d.line((0, 120, w, 60), fill=(239, 68, 68), width=4)
-    d.line((0, 135, w, 80), fill=(245, 158, 11), width=3)
-    d.text((15, 18), "TESLA PLAID", fill=(255, 255, 255), font=FONT_BEBAS_LG)
-    d.text((15, 65), "0-60 MPH LAUNCH", fill=(239, 68, 68), font=FONT_BEBAS_MD)
-    d.rounded_rectangle((15, 130, 100, 160), radius=6, fill=(220, 38, 38))
-    d.text((22, 134), "1.99 SECONDS", fill=(255, 255, 255), font=FONT_BEBAS_SM)
-    d.rounded_rectangle((w - 70, h - 35, w - 10, h - 10), radius=4, fill=(0, 0, 0, 200))
-    d.text((w - 62, h - 32), "12:05", fill=(255, 255, 255), font=FONT_SM)
-    return thumb
-
 
 # =============================================================
-# 1. SCREEN: Hero App Feed (Home Screen - Exact App Structure, NO ADS)
+# 1. SCREEN: Hero App Feed (Home Screen - 100% Real Templates, NO ADS)
 # =============================================================
 def make_hero_feed():
     img = Image.new("RGBA", (W, H), COLOR_BG)
@@ -236,13 +143,12 @@ def make_hero_feed():
     draw.line((0, 125, W, 125), fill=COLOR_BAR_BORDER, width=2)
     draw_status_bar(draw, dark=False)
     
-    # Header Icons & Title
     # Left: info icon
     info_icon = load_app_drawable("info.png", (38, 38))
     if info_icon:
         img.paste(info_icon, (24, 65), info_icon)
         
-    # Center: "Thumbnail Maker"
+    # Center: "Thumbnail Maker" in Nunito Bold
     draw.text((W//2 - 120, 66), "Thumbnail Maker", fill=COLOR_TEXT, font=FONT_TITLE)
     
     # Right: PRO Crown icon
@@ -269,9 +175,9 @@ def make_hero_feed():
             img.paste(cimg, (cx, strip_y), cimg)
             
     # ---------------------------------------------------------
-    # Category Tabs Bar (Height 55px, at y = 305)
+    # Category Tabs Bar (Height 55px, at y = 300)
     # ---------------------------------------------------------
-    tabs_y = 305
+    tabs_y = 300
     draw.rectangle((0, tabs_y, W, tabs_y + 55), fill=COLOR_BAR)
     draw.line((0, tabs_y + 55, W, tabs_y + 55), fill=COLOR_BAR_BORDER, width=1)
     
@@ -287,61 +193,31 @@ def make_hero_feed():
             draw.rectangle((tx - 32, tabs_y + 50, tx + 32, tabs_y + 54), fill=COLOR_ACCENT)
             
     # ---------------------------------------------------------
-    # 2-Column Grid of 16:9 Thumbnail Cards (at y = 380)
+    # 2-Column Grid of 16:9 REAL Thumbnails (Exact App CardView Structure)
     # ---------------------------------------------------------
-    grid_y = 380
-    cw, ch = 325, 183
-    grid_items = [
-        create_gaming_thumb(cw, ch),
-        create_fitness_thumb(cw, ch),
-        create_growth_thumb(cw, ch),
-        create_podcast_thumb(cw, ch),
-        create_cinematic_thumb(cw, ch),
-        create_car_thumb(cw, ch)
-    ]
+    grid_y = 368
+    cw, ch = 330, 186 # exact 16:9 ratio
+    col_x = [20, 370] # 20px margin, 20px gap, 20px right margin (total 720)
     
-    for idx, gthumb in enumerate(grid_items):
+    mask = Image.new("L", (cw, ch), 0)
+    mdraw = ImageDraw.Draw(mask)
+    mdraw.rounded_rectangle((0, 0, cw, ch), radius=12, fill=255)
+    
+    for idx, tfilename in enumerate(REAL_THUMBS_FEED):
         col = idx % 2
         row = idx // 2
-        gx = 22 + col * (cw + 26)
-        gy = grid_y + row * (ch + 115)
+        gx = col_x[col]
+        gy = grid_y + row * (ch + 14)
         
-        if gy + ch > H - 130:
+        if gy + ch > H - 140:
             break
             
-        # Draw Card Container with subtle drop shadow
-        draw.rounded_rectangle((gx - 4, gy - 4, gx + cw + 4, gy + ch + 90), radius=14, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
+        real_img = load_real_thumb(tfilename, cw, ch)
         
-        # Paste 16:9 thumbnail
-        # Create mask with rounded top corners
-        mask = Image.new("L", (cw, ch), 0)
-        mdraw = ImageDraw.Draw(mask)
-        mdraw.rounded_rectangle((0, 0, cw, ch), radius=10, fill=255)
-        img.paste(gthumb, (gx, gy), mask)
-        
-        # Card meta info below thumbnail
-        if idx == 0:
-            draw.text((gx + 10, gy + ch + 12), "Cyberpunk Pro Streamer 4K", fill=COLOR_TEXT, font=FONT_SMB)
-            draw.text((gx + 10, gy + ch + 38), "1280x720 HD • 42.5K views", fill=COLOR_TEXT_MUTED, font=FONT_SM)
-        elif idx == 1:
-            draw.text((gx + 10, gy + ch + 12), "10-Min HIIT Body Blast", fill=COLOR_TEXT, font=FONT_SMB)
-            draw.text((gx + 10, gy + ch + 38), "1280x720 HD • 89.1K views", fill=COLOR_TEXT_MUTED, font=FONT_SM)
-        elif idx == 2:
-            draw.text((gx + 10, gy + ch + 12), "0 to 100K YouTube Strategy", fill=COLOR_TEXT, font=FONT_SMB)
-            draw.text((gx + 10, gy + ch + 38), "1280x720 HD • 115K views", fill=COLOR_TEXT_MUTED, font=FONT_SM)
-        elif idx == 3:
-            draw.text((gx + 10, gy + ch + 12), "Future of AI Podcast #42", fill=COLOR_TEXT, font=FONT_SMB)
-            draw.text((gx + 10, gy + ch + 38), "1280x720 HD • 34.2K views", fill=COLOR_TEXT_MUTED, font=FONT_SM)
-        elif idx == 4:
-            draw.text((gx + 10, gy + ch + 12), "Cinematic Color Masterclass", fill=COLOR_TEXT, font=FONT_SMB)
-            draw.text((gx + 10, gy + ch + 38), "1280x720 HD • 58.7K views", fill=COLOR_TEXT_MUTED, font=FONT_SM)
-        elif idx == 5:
-            draw.text((gx + 10, gy + ch + 12), "Tesla Model S Plaid Speed", fill=COLOR_TEXT, font=FONT_SMB)
-            draw.text((gx + 10, gy + ch + 38), "1280x720 HD • 91.3K views", fill=COLOR_TEXT_MUTED, font=FONT_SM)
-            
-        # PRO Badge or Edit button
-        draw.rounded_rectangle((gx + cw - 65, gy + ch + 52, gx + cw - 10, gy + ch + 78), radius=6, fill=COLOR_ACCENT)
-        draw.text((gx + cw - 52, gy + ch + 56), "EDIT", fill=(255, 255, 255), font=FONT_SM)
+        # Subtle CardView shadow/border
+        draw.rounded_rectangle((gx - 1, gy - 1, gx + cw + 1, gy + ch + 1), radius=13, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
+        # Paste real thumbnail image
+        img.paste(real_img, (gx, gy), mask)
 
     # Bottom Navigation Dock
     draw_bottom_dock(img, draw, active_idx=0)
@@ -364,22 +240,21 @@ def make_templates_screen():
     draw.polygon([(40, 84), (55, 72), (55, 96)], fill=COLOR_TEXT)
     draw.line((45, 84, 70, 84), fill=COLOR_TEXT, width=4)
     
-    # Center: Title "Youtube Cover"
+    # Center: Title "Youtube Cover" in Nunito Bold
     draw.text((95, 68), "Youtube Cover", fill=COLOR_TEXT, font=FONT_TITLE)
     
     # Right: Search & PRO
-    # Search icon
     draw.ellipse((W - 120, 72, W - 102, 90), outline=COLOR_TEXT, width=2)
     draw.line((W - 106, 86, W - 98, 94), fill=COLOR_TEXT, width=3)
-    # PRO Crown icon
+    
     pro_icon = load_app_drawable("pro_ic.png", (46, 38))
     if pro_icon:
         img.paste(pro_icon, (W - 70, 65), pro_icon)
         
-    # Category Sub-tabs (Fitness, Business, Fashion, Food, Summer, Gaming)
+    # Category Sub-tabs (Fitness, Business, Fashion, Food, Summer)
     tabs_y = 135
-    draw.rectangle((0, tabs_y, W, tabs_y + 60), fill=COLOR_BAR)
-    draw.line((0, tabs_y + 60, W, tabs_y + 60), fill=COLOR_BAR_BORDER, width=1)
+    draw.rectangle((0, tabs_y, W, tabs_y + 55), fill=COLOR_BAR)
+    draw.line((0, tabs_y + 55, W, tabs_y + 55), fill=COLOR_BAR_BORDER, width=1)
     
     sub_tabs = ["Fitness", "Business", "Fashion", "Food", "Summer"]
     tab_spacing = W // len(sub_tabs)
@@ -387,54 +262,32 @@ def make_templates_screen():
         tx = idx * tab_spacing + tab_spacing // 2
         is_active = (idx == 0) # Fitness active
         t_color = COLOR_TEXT if is_active else COLOR_TEXT_MUTED
-        draw.text((tx - len(tab_name)*5, tabs_y + 18), tab_name, fill=t_color, font=FONT_SMB)
+        draw.text((tx - len(tab_name)*5, tabs_y + 16), tab_name, fill=t_color, font=FONT_SMB)
         if is_active:
-            draw.rectangle((tx - 28, tabs_y + 54, tx + 28, tabs_y + 58), fill=COLOR_ACCENT)
+            draw.rectangle((tx - 28, tabs_y + 50, tx + 28, tabs_y + 54), fill=COLOR_ACCENT)
             
-    # 2-Column Grid of Youtube Cover Templates (aspect ratio 16:9)
-    grid_y = 215
-    cw, ch = 325, 183
-    grid_items = [
-        create_fitness_thumb(cw, ch),
-        create_growth_thumb(cw, ch),
-        create_gaming_thumb(cw, ch),
-        create_podcast_thumb(cw, ch),
-        create_cinematic_thumb(cw, ch),
-        create_car_thumb(cw, ch)
-    ]
+    # 2-Column Grid of 16:9 REAL Youtube Cover Templates
+    grid_y = 205
+    cw, ch = 330, 186
+    col_x = [20, 370]
     
-    for idx, gthumb in enumerate(grid_items):
+    mask = Image.new("L", (cw, ch), 0)
+    mdraw = ImageDraw.Draw(mask)
+    mdraw.rounded_rectangle((0, 0, cw, ch), radius=12, fill=255)
+    
+    for idx, tfilename in enumerate(REAL_THUMBS_TEMPLATES):
         col = idx % 2
         row = idx // 2
-        gx = 22 + col * (cw + 26)
-        gy = grid_y + row * (ch + 115)
+        gx = col_x[col]
+        gy = grid_y + row * (ch + 14)
         
-        if gy + ch > H - 130:
+        if gy + ch > H - 140:
             break
             
-        draw.rounded_rectangle((gx - 4, gy - 4, gx + cw + 4, gy + ch + 90), radius=14, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
+        real_img = load_real_thumb(tfilename, cw, ch)
         
-        mask = Image.new("L", (cw, ch), 0)
-        mdraw = ImageDraw.Draw(mask)
-        mdraw.rounded_rectangle((0, 0, cw, ch), radius=10, fill=255)
-        img.paste(gthumb, (gx, gy), mask)
-        
-        # Meta info
-        labels = [
-            ("Daily Fitness Routine", "High Energy • 1080p HD"),
-            ("Business Growth Pitch", "Investor Ready • Pro"),
-            ("Esports Tournament 2026", "Twitch / YT Banner"),
-            ("Tech & AI Insights", "Podcast Series Cover"),
-            ("Filmmaking Secrets", "Cinematic Preset"),
-            ("Hypercar Track Day", "Automobile Feature")
-        ]
-        title, sub = labels[idx]
-        draw.text((gx + 10, gy + ch + 12), title, fill=COLOR_TEXT, font=FONT_SMB)
-        draw.text((gx + 10, gy + ch + 38), sub, fill=COLOR_TEXT_MUTED, font=FONT_SM)
-        
-        # Action button: "USE TEMPLATE"
-        draw.rounded_rectangle((gx + cw - 120, gy + ch + 52, gx + cw - 10, gy + ch + 78), radius=6, fill=COLOR_ACCENT)
-        draw.text((gx + cw - 110, gy + ch + 56), "USE TEMPLATE", fill=(255, 255, 255), font=FONT_SM)
+        draw.rounded_rectangle((gx - 1, gy - 1, gx + cw + 1, gy + ch + 1), radius=13, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
+        img.paste(real_img, (gx, gy), mask)
 
     # Bottom Navigation Dock
     draw_bottom_dock(img, draw, active_idx=1)
@@ -459,18 +312,15 @@ def make_editor_screen():
     draw.text((85, 68), "Editor", fill=COLOR_TEXT, font=FONT_TITLE)
     
     # Right: Add layer '+', Save '💾', Overflow '⋮'
-    # '+' icon
     draw.line((W - 170, 84, W - 146, 84), fill=COLOR_TEXT, width=4)
     draw.line((W - 158, 72, W - 158, 96), fill=COLOR_TEXT, width=4)
     
-    # Save icon (ic_save.png)
     save_icon = load_app_drawable("ic_save.png", (38, 38))
     if save_icon:
         img.paste(save_icon, (W - 125, 66), save_icon)
     else:
         draw.rectangle((W - 125, 68, W - 95, 98), outline=COLOR_TEXT, width=2)
         
-    # Overflow menu '⋮'
     for my in [74, 84, 94]:
         draw.ellipse((W - 60, my - 2, W - 56, my + 2), fill=COLOR_TEXT)
         
@@ -508,79 +358,49 @@ def make_editor_screen():
     draw.text((W - 130, tools_y + 22), "4 LAYERS", fill=COLOR_ACCENT, font=FONT_SMB)
 
     # ---------------------------------------------------------
-    # MAIN CANVAS (16:9 Aspect Ratio: 660 x 372 px)
+    # MAIN CANVAS (16:9 Aspect Ratio: 660 x 372 px) - Loaded with REAL Thumbnail!
     # ---------------------------------------------------------
     canv_w, canv_h = 660, 372
     canv_x = (W - canv_w) // 2
-    canv_y = 240
+    canv_y = 235
     
     # Canvas drop shadow
     draw.rounded_rectangle((canv_x - 4, canv_y - 4, canv_x + canv_w + 4, canv_y + canv_h + 4), radius=16, fill=(15, 14, 20))
     
-    # Inside Canvas: High-Energy Gaming Thumbnail
-    canvas_img = Image.new("RGBA", (canv_w, canv_h), (12, 10, 25, 255))
-    cd = ImageDraw.Draw(canvas_img)
-    # Neon background
-    for cy in range(canv_h):
-        r = int(20 + 70 * (cy / canv_h))
-        g = int(10 + 20 * (1 - cy / canv_h))
-        b = int(50 + 110 * (cy / canv_h))
-        cd.line((0, cy, canv_w, cy), fill=(r, g, b, 255))
-    # Angular laser lines
-    cd.polygon([(canv_w - 240, 0), (canv_w, 0), (canv_w, canv_h), (canv_w - 120, canv_h)], fill=(60, 25, 120, 210))
-    cd.line((canv_w - 240, 0, canv_w - 120, canv_h), fill=(0, 240, 255), width=4)
-    cd.line((canv_w - 280, 0, canv_w - 160, canv_h), fill=(255, 0, 128), width=3)
+    # Load High-Resolution REAL YouTube Thumbnail
+    real_canvas_source = load_real_thumb("real_thumb_15_960x540.jpg", canv_w, canv_h).convert("RGBA")
+    cd = ImageDraw.Draw(real_canvas_source)
     
-    # Paste Creator Cutout on Right
-    creator_path = "assets/images/creator-cutout.png"
-    if os.path.exists(creator_path):
-        c_cutout = Image.open(creator_path).convert("RGBA").resize((270, 338))
-        canvas_img.paste(c_cutout, (canv_w - 260, canv_h - 338), c_cutout)
-        
-    # Bold 3D Text on Left
-    cd.text((32, 45), "APEX HERO", fill=(0, 0, 0), font=FONT_BEBAS_XL) # shadow
-    cd.text((30, 42), "APEX HERO", fill=(255, 220, 0), font=FONT_BEBAS_XL)
-    
-    cd.text((32, 102), "ROAD TO PREDATOR", fill=(0, 0, 0), font=FONT_BEBAS_LG)
-    cd.text((30, 100), "ROAD TO PREDATOR", fill=(255, 255, 255), font=FONT_BEBAS_LG)
-    
-    # 4K & 60FPS Badges
-    cd.rounded_rectangle((30, 290, 120, 335), radius=8, fill=(255, 0, 85))
-    cd.text((45, 297), "4K 60FPS", fill=(255, 255, 255), font=FONT_BEBAS_SM)
-    
-    cd.rounded_rectangle((135, 290, 240, 335), radius=8, fill=(0, 209, 143))
-    cd.text((148, 297), "SOLO QUEUE", fill=(255, 255, 255), font=FONT_BEBAS_SM)
-    
-    # Active selected bounding box around "APEX HERO"
-    box_x1, box_y1 = 20, 30
-    box_x2, box_y2 = 300, 95
+    # Active selected bounding box around headline element
+    box_x1, box_y1 = 28, 35
+    box_x2, box_y2 = 360, 115
     # Dashed cyan line
     for dx in range(box_x1, box_x2, 12):
-        cd.line((dx, box_y1, min(dx + 6, box_x2), box_y1), fill=COLOR_ACCENT, width=2)
-        cd.line((dx, box_y2, min(dx + 6, box_x2), box_y2), fill=COLOR_ACCENT, width=2)
+        cd.line((dx, box_y1, min(dx + 6, box_x2), box_y1), fill=COLOR_ACCENT, width=3)
+        cd.line((dx, box_y2, min(dx + 6, box_x2), box_y2), fill=COLOR_ACCENT, width=3)
     for dy in range(box_y1, box_y2, 12):
-        cd.line((box_x1, dy, box_x1, min(dy + 6, box_y2)), fill=COLOR_ACCENT, width=2)
-        cd.line((box_x2, dy, box_x2, min(dy + 6, box_y2)), fill=COLOR_ACCENT, width=2)
+        cd.line((box_x1, dy, box_x1, min(dy + 6, box_y2)), fill=COLOR_ACCENT, width=3)
+        cd.line((box_x2, dy, box_x2, min(dy + 6, box_y2)), fill=COLOR_ACCENT, width=3)
         
-    # Corner Handles
-    cd.ellipse((box_x1 - 8, box_y1 - 8, box_x1 + 8, box_y1 + 8), fill=(239, 68, 68), outline=(255, 255, 255), width=2) # Delete
-    cd.ellipse((box_x2 - 8, box_y1 - 8, box_x2 + 8, box_y1 + 8), fill=COLOR_ACCENT, outline=(255, 255, 255), width=2) # Rotate
-    cd.ellipse((box_x2 - 8, box_y2 - 8, box_x2 + 8, box_y2 + 8), fill=COLOR_ACCENT, outline=(255, 255, 255), width=2) # Scale
-    cd.ellipse((box_x1 - 8, box_y2 - 8, box_x1 + 8, box_y2 + 8), fill=(245, 158, 11), outline=(255, 255, 255), width=2) # Lock
+    # 4 Corner Handles matching app
+    cd.ellipse((box_x1 - 10, box_y1 - 10, box_x1 + 10, box_y1 + 10), fill=(239, 68, 68), outline=(255, 255, 255), width=2) # Delete
+    cd.ellipse((box_x2 - 10, box_y1 - 10, box_x2 + 10, box_y1 + 10), fill=COLOR_ACCENT, outline=(255, 255, 255), width=2) # Rotate
+    cd.ellipse((box_x2 - 10, box_y2 - 10, box_x2 + 10, box_y2 + 10), fill=COLOR_ACCENT, outline=(255, 255, 255), width=2) # Scale
+    cd.ellipse((box_x1 - 10, box_y2 - 10, box_x1 + 10, box_y2 + 10), fill=(245, 158, 11), outline=(255, 255, 255), width=2) # Lock
     
     # Paste Canvas onto Screen
     mask_c = Image.new("L", (canv_w, canv_h), 0)
     mdraw_c = ImageDraw.Draw(mask_c)
     mdraw_c.rounded_rectangle((0, 0, canv_w, canv_h), radius=14, fill=255)
-    img.paste(canvas_img, (canv_x, canv_y), mask_c)
+    img.paste(real_canvas_source, (canv_x, canv_y), mask_c)
     
     # ---------------------------------------------------------
     # Floating Layer Inspector Card (below canvas)
     # ---------------------------------------------------------
     insp_y = canv_y + canv_h + 25
     draw.rounded_rectangle((canv_x, insp_y, canv_x + canv_w, insp_y + 110), radius=16, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
-    draw.text((canv_x + 20, insp_y + 18), "Active Text Layer: APEX HERO", fill=COLOR_TEXT, font=FONT_SMB)
-    draw.text((canv_x + 20, insp_y + 44), "Font: Bebas Neue • Size: 48 • Stroke: 4px Cyan", fill=COLOR_TEXT_MUTED, font=FONT_SM)
+    draw.text((canv_x + 20, insp_y + 18), "Selected Layer: Headline Text", fill=COLOR_TEXT, font=FONT_SMB)
+    draw.text((canv_x + 20, insp_y + 44), "Font: Nunito Bold • Size: 48 • Stroke: 4px Cyan", fill=COLOR_TEXT_MUTED, font=FONT_SM)
     
     # Quick sliders: Opacity & Shadow
     draw.text((canv_x + 20, insp_y + 72), "Opacity", fill=COLOR_TEXT_MUTED, font=FONT_SM)
@@ -646,12 +466,11 @@ def make_cutout_screen():
     draw.polygon([(40, 84), (55, 72), (55, 96)], fill=COLOR_TEXT)
     draw.line((45, 84, 70, 84), fill=COLOR_TEXT, width=4)
     
-    # Center: "Cut Photo"
+    # Center: "Cut Photo" in Nunito Bold
     draw.text((95, 68), "Cut Photo", fill=COLOR_TEXT, font=FONT_TITLE)
     
     # Right: Save / Download Icon
     draw.rounded_rectangle((W - 85, 64, W - 30, 102), radius=10, fill=COLOR_ACCENT)
-    # Down arrow download symbol
     draw.line((W - 58, 74, W - 58, 90), fill=(255, 255, 255), width=3)
     draw.polygon([(W - 65, 86), (W - 58, 94), (W - 51, 86)], fill=(255, 255, 255))
     
@@ -676,7 +495,6 @@ def make_cutout_screen():
         img.paste(c_cutout, (W//2 - 220, canv_y + 120), c_cutout)
         
     # Offset Cursor Brush Mechanism (Exact App Offset Feature)
-    # Red Touch circle (where user places finger)
     finger_x, finger_y = 440, canv_y + 580
     draw.ellipse((finger_x - 30, finger_y - 30, finger_x + 30, finger_y + 30), outline=(239, 68, 68), width=3)
     draw.ellipse((finger_x - 6, finger_y - 6, finger_x + 6, finger_y + 6), fill=(239, 68, 68))
@@ -777,18 +595,18 @@ def make_export_screen():
     draw.rounded_rectangle((40, 145, W - 40, 205), radius=16, fill=(16, 185, 129, 40), outline=(16, 185, 129), width=2)
     draw.text((W//2 - 170, 162), "✓ Saved in Full 1280x720 HD Quality", fill=(52, 211, 153), font=FONT_SMB)
     
-    # Hero Preview Card (16:9 Thumbnail, 640 x 360 px)
+    # Hero Preview Card (16:9 Thumbnail, 640 x 360 px) - Real High-Res Thumbnail!
     card_w, card_h = 640, 360
     card_x = (W - card_w) // 2
     card_y = 225
     
-    gaming_thumb = create_gaming_thumb(card_w, card_h)
+    real_thumb = load_real_thumb("real_thumb_15_960x540.jpg", card_w, card_h)
     draw.rounded_rectangle((card_x - 4, card_y - 4, card_x + card_w + 4, card_y + card_h + 4), radius=18, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=2)
     
     mask = Image.new("L", (card_w, card_h), 0)
     mdraw = ImageDraw.Draw(mask)
     mdraw.rounded_rectangle((0, 0, card_w, card_h), radius=16, fill=255)
-    img.paste(gaming_thumb, (card_x, card_y), mask)
+    img.paste(real_thumb, (card_x, card_y), mask)
     
     # Resolution Specs Card
     specs_y = card_y + card_h + 30
@@ -820,7 +638,7 @@ def make_export_screen():
 
 if __name__ == "__main__":
     os.makedirs("assets/images", exist_ok=True)
-    print("Generating authentic ad-free screens with real app structure...")
+    print("Generating authentic ad-free screens with REAL APP THUMBNAILS...")
     
     feed = make_hero_feed()
     feed.save("assets/images/app-screen-feed.webp", "WEBP", quality=95)
@@ -842,4 +660,4 @@ if __name__ == "__main__":
     export_screen.save("assets/images/app-screen-export.webp", "WEBP", quality=95)
     print("[OK] Saved assets/images/app-screen-export.webp (720x1520)")
     
-    print("\nAll 5 mobile app screens generated successfully with real app fidelity and zero ads!")
+    print("\nAll 5 mobile app screens generated successfully with REAL APP THUMBNAILS and zero ads!")
