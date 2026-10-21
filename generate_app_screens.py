@@ -485,6 +485,7 @@ def make_editor_screen():
 
 # =============================================================
 # 4. SCREEN: 1-Tap Cutout & Background Eraser (activity_eraser.xml)
+# Real Human YouTube Creator Cutout, Neon Edge Glow, Real Seekbars & Tools
 # =============================================================
 def make_cutout_screen():
     img = Image.new("RGBA", (W, H), COLOR_BG)
@@ -495,19 +496,27 @@ def make_cutout_screen():
     draw.line((0, 125, W, 125), fill=COLOR_BAR_BORDER, width=1)
     draw_status_bar(draw, dark=False)
     
-    # Left: Back arrow
-    draw.polygon([(40, 84), (55, 72), (55, 96)], fill=COLOR_TEXT)
-    draw.line((45, 84, 70, 84), fill=COLOR_TEXT, width=4)
+    # Left: Back arrow (btn_new_back.png)
+    back_icon = load_app_drawable("btn_new_back.png", (36, 36))
+    if back_icon:
+        img.paste(back_icon, (24, 66), back_icon)
+    else:
+        draw.polygon([(28, 84), (45, 72), (45, 96)], fill=COLOR_TEXT)
+        draw.line((35, 84, 55, 84), fill=COLOR_TEXT, width=4)
+        
+    # Title: Cut Photo (bold)
+    draw.text((75, 68), "Cut Photo", fill=COLOR_TEXT, font=FONT_TITLE)
     
-    # Center: "Cut Photo" in Nunito Bold
-    draw.text((95, 68), "Cut Photo", fill=COLOR_TEXT, font=FONT_TITLE)
+    # Right: Save / Download Icon (btn_download.xml vector)
+    tray_x, tray_y = W - 50, 83
+    draw.line((tray_x - 12, tray_y + 4, tray_x - 12, tray_y + 12), fill=COLOR_TEXT, width=3)
+    draw.line((tray_x - 12, tray_y + 12, tray_x + 12, tray_y + 12), fill=COLOR_TEXT, width=3)
+    draw.line((tray_x + 12, tray_y + 12, tray_x + 12, tray_y + 4), fill=COLOR_TEXT, width=3)
+    draw.line((tray_x, tray_y - 12, tray_x, tray_y + 5), fill=COLOR_TEXT, width=3)
+    draw.line((tray_x - 6, tray_y - 1, tray_x, tray_y + 6), fill=COLOR_TEXT, width=3)
+    draw.line((tray_x + 6, tray_y - 1, tray_x, tray_y + 6), fill=COLOR_TEXT, width=3)
     
-    # Right: Save / Download Icon
-    draw.rounded_rectangle((W - 85, 64, W - 30, 102), radius=10, fill=COLOR_ACCENT)
-    draw.line((W - 58, 74, W - 58, 90), fill=(255, 255, 255), width=3)
-    draw.polygon([(W - 65, 86), (W - 58, 94), (W - 51, 86)], fill=(255, 255, 255))
-    
-    # Main Canvas: Checkerboard Transparency
+    # Main Canvas: Checkerboard Transparency (Sub-pixel grid)
     canv_y = 135
     canv_h = 880
     sq_size = 24
@@ -517,11 +526,23 @@ def make_cutout_screen():
             sq_color = (42, 40, 52) if is_dark else (55, 52, 68)
             draw.rectangle((cx, cy, min(cx + sq_size, W), min(cy + sq_size, canv_y + canv_h)), fill=sq_color)
             
-    # Paste Subject Cutout
-    creator_path = "assets/images/creator-cutout.png"
-    if os.path.exists(creator_path):
-        c_cutout = Image.open(creator_path).convert("RGBA").resize((440, 550))
-        img.paste(c_cutout, (W//2 - 220, canv_y + 120), c_cutout)
+    # Paste REAL HUMAN CREATOR Cutout
+    cutout_path = "assets/images/real-creator-cutout.png"
+    if not os.path.exists(cutout_path):
+        cutout_path = "assets/images/creator-cutout.png"
+        
+    if os.path.exists(cutout_path):
+        c_cutout = Image.open(cutout_path).convert("RGBA")
+        cw, ch = 450, 704
+        c_cutout = c_cutout.resize((cw, ch), Image.Resampling.LANCZOS)
+        
+        # Draw dynamic neon cyan boundary glow around creator
+        glow_mask = Image.new("RGBA", (cw + 16, ch + 16), (0, 0, 0, 0))
+        alpha_mask = c_cutout.split()[-1]
+        for ox, oy in [(-3,0),(3,0),(0,-3),(0,3),(-2,-2),(2,2),(-2,2),(2,-2)]:
+            glow_mask.paste(Image.new("RGBA", (cw, ch), (14, 172, 255, 75)), (ox + 8, oy + 8), alpha_mask)
+        img.paste(glow_mask, (W//2 - cw//2 - 8, canv_y + 112), glow_mask)
+        img.paste(c_cutout, (W//2 - cw//2, canv_y + 120), c_cutout)
         
     # Offset Cursor Brush Mechanism (Exact App Offset Feature)
     finger_x, finger_y = 440, canv_y + 580
@@ -538,7 +559,7 @@ def make_cutout_screen():
     draw.line((brush_x, brush_y - 45, brush_x, brush_y + 45), fill=COLOR_ACCENT, width=2)
     draw.text((brush_x + 42, brush_y - 10), "Offset Eraser (150px)", fill=COLOR_ACCENT, font=FONT_SMB)
 
-    # Adjustment Sliders Panel (Offset & Threshold Seekbars)
+    # Adjustment Sliders Panel (Offset & Threshold Seekbars matching activity_eraser.xml)
     panel_y = canv_y + canv_h + 15
     draw.rounded_rectangle((20, panel_y, W - 20, panel_y + 160), radius=16, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
     
@@ -585,76 +606,97 @@ def make_cutout_screen():
         if is_active:
             draw.rounded_rectangle((cx - 20, nav_y + 96, cx + 20, nav_y + 100), radius=2, fill=COLOR_ACCENT)
             
-    # System bar pill
+    # System bar pill (Samsung Galaxy S24 slim gesture bar)
     draw.rectangle((0, H - 25, W, H), fill=(20, 19, 25))
     draw.rounded_rectangle((W//2 - 55, H - 15, W//2 + 55, H - 10), radius=3, fill=(140, 140, 150))
     return img
 
 
 # =============================================================
-# 5. SCREEN: 1-Tap Save & Export Ready for YouTube Studio
+# 5. SCREEN: 1-Tap Save & Export Ready for YouTube Studio (activity_share_image.xml)
+# 100% Authentic: Clean Vector Checkmark (No Broken Glyphs), Real Share Actions, No Misplaced Menu
 # =============================================================
 def make_export_screen():
     img = Image.new("RGBA", (W, H), COLOR_BG)
     draw = ImageDraw.Draw(img)
     
-    # Top Bar: Background #2F2D3A (height 125px)
+    # Top Bar: Background #2F2D3A (height 125px, activity_share_image.xml: top_layout)
     draw.rectangle((0, 0, W, 125), fill=COLOR_BAR)
     draw.line((0, 125, W, 125), fill=COLOR_BAR_BORDER, width=1)
     draw_status_bar(draw, dark=False)
     
-    # Left: Back arrow
-    draw.polygon([(40, 84), (55, 72), (55, 96)], fill=COLOR_TEXT)
-    draw.line((45, 84, 70, 84), fill=COLOR_TEXT, width=4)
+    # Left: Back arrow (btn_new_back.png)
+    back_icon = load_app_drawable("btn_new_back.png", (36, 36))
+    if back_icon:
+        img.paste(back_icon, (24, 66), back_icon)
+    else:
+        draw.polygon([(28, 84), (45, 72), (45, 96)], fill=COLOR_TEXT)
+        draw.line((35, 84, 55, 84), fill=COLOR_TEXT, width=4)
+        
+    # Title: SHARE IMAGE (txt_toolbar in activity_share_image.xml)
+    draw.text((75, 68), "SHARE IMAGE", fill=COLOR_TEXT, font=FONT_TITLE)
     
-    # Center: "Thumbnail Saved"
-    draw.text((95, 68), "Thumbnail Saved", fill=COLOR_TEXT, font=FONT_TITLE)
+    # Right: Share icon & Home icon (btnShareMore & img_home in activity_share_image.xml)
+    share_icon = load_app_drawable("ic_share_share.png", (32, 32)) or load_app_drawable("ic_share.png", (32, 32))
+    if share_icon:
+        img.paste(share_icon, (W - 110, 68), share_icon)
+    home_icon = load_app_drawable("ic_home.png", (32, 32))
+    if home_icon:
+        img.paste(home_icon, (W - 55, 68), home_icon)
     
-    # Right: Share icon
-    draw.ellipse((W - 68, 70, W - 48, 90), outline=COLOR_TEXT, width=2)
-    draw.polygon([(W - 58, 68), (W - 58, 80), (W - 52, 74)], fill=COLOR_TEXT)
+    # Success Pill Banner with SHARP VECTOR CHECKMARK (Zero Broken Unicode Glyphs!)
+    pill_y = 150
+    draw.rounded_rectangle((30, pill_y, W - 30, pill_y + 60), radius=16, fill=(16, 185, 129, 35), outline=(16, 185, 129), width=2)
+    # Vector Checkmark Circle
+    draw.ellipse((55, pill_y + 14, 87, pill_y + 46), fill=(16, 185, 129))
+    draw.line((63, pill_y + 30, 70, pill_y + 38), fill=(255, 255, 255), width=3)
+    draw.line((70, pill_y + 38, 79, pill_y + 22), fill=(255, 255, 255), width=3)
+    draw.text((98, pill_y + 20), "Saved to Gallery in Full 1280x720 HD Quality", fill=(52, 211, 153), font=FONT_SMB)
     
-    # Success Pill Banner
-    draw.rounded_rectangle((40, 145, W - 40, 205), radius=16, fill=(16, 185, 129, 40), outline=(16, 185, 129), width=2)
-    draw.text((W//2 - 170, 162), "✓ Saved in Full 1280x720 HD Quality", fill=(52, 211, 153), font=FONT_SMB)
-    
-    # Hero Preview Card (16:9 Thumbnail, 640 x 360 px) - Real High-Res Thumbnail!
-    card_w, card_h = 640, 360
+    # Hero Preview Card (16:9 Thumbnail, 660 x 371 px)
+    card_w, card_h = 660, 371
     card_x = (W - card_w) // 2
-    card_y = 225
+    card_y = 235
     
     real_thumb = load_real_thumb("real_thumb_15_960x540.jpg", card_w, card_h)
-    draw.rounded_rectangle((card_x - 4, card_y - 4, card_x + card_w + 4, card_y + card_h + 4), radius=18, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=2)
+    draw.rounded_rectangle((card_x - 4, card_y - 4, card_x + card_w + 4, card_y + card_h + 4), radius=18, fill=(15, 14, 20), outline=COLOR_BAR_BORDER, width=2)
     
     mask = Image.new("L", (card_w, card_h), 0)
     mdraw = ImageDraw.Draw(mask)
     mdraw.rounded_rectangle((0, 0, card_w, card_h), radius=16, fill=255)
     img.paste(real_thumb, (card_x, card_y), mask)
     
-    # Resolution Specs Card
+    # File Specs Card (activity_share_image.xml: txt_path, txt_size)
     specs_y = card_y + card_h + 30
-    draw.rounded_rectangle((40, specs_y, W - 40, specs_y + 110), radius=16, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
-    draw.text((65, specs_y + 20), "File Details", fill=COLOR_TEXT, font=FONT_SMB)
-    draw.text((65, specs_y + 52), "Resolution: 1280 × 720 px (16:9 Ratio)", fill=COLOR_TEXT_MUTED, font=FONT_SM)
-    draw.text((65, specs_y + 76), "Format: PNG • 300 DPI • Ready for YouTube Studio", fill=(52, 211, 153), font=FONT_SM)
+    draw.rounded_rectangle((30, specs_y, W - 30, specs_y + 120), radius=16, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
+    draw.text((55, specs_y + 18), "File Details", fill=COLOR_TEXT, font=FONT_SMB)
+    draw.text((55, specs_y + 50), "Location: DCIM / ThumbnailMaker / thumb_export_hd.png", fill=COLOR_TEXT_MUTED, font=FONT_SM)
+    draw.text((55, specs_y + 80), "Resolution: 1280 × 720 px (16:9 HD) • PNG 300 DPI", fill=(52, 211, 153), font=FONT_SMB)
     
-    # Quick Action Buttons
-    btn_y = specs_y + 135
-    # Primary YouTube Studio button (Red)
-    draw.rounded_rectangle((40, btn_y, W - 40, btn_y + 65), radius=16, fill=(239, 68, 68))
-    draw.polygon([(75, btn_y + 20), (75, btn_y + 44), (95, btn_y + 32)], fill=(255, 255, 255))
-    draw.text((115, btn_y + 18), "Open in YouTube Studio", fill=(255, 255, 255), font=FONT_HEADING)
+    # Action Buttons (Cleanly laid out, NO misplaced bottom dock!)
+    btn_y = specs_y + 150
+    # 1) Primary Share Your Image button (activity_share_image.xml: btn_share)
+    draw.rounded_rectangle((30, btn_y, W - 30, btn_y + 68), radius=18, fill=COLOR_ACCENT)
+    draw.polygon([(65, btn_y + 24), (65, btn_y + 46), (82, btn_y + 35)], fill=(255, 255, 255))
+    draw.text((95, btn_y + 20), "Share your image", fill=(255, 255, 255), font=FONT_TITLE)
     
-    # Share to Instagram
-    draw.rounded_rectangle((40, btn_y + 85, W - 40, btn_y + 150), radius=16, fill=(225, 48, 108))
-    draw.text((W//2 - 90, btn_y + 103), "Share to Instagram", fill=(255, 255, 255), font=FONT_HEADING)
+    # 2) YouTube Studio Export (Red)
+    draw.rounded_rectangle((30, btn_y + 88, W - 30, btn_y + 152), radius=18, fill=(239, 68, 68))
+    # Play icon
+    draw.polygon([(65, btn_y + 107), (65, btn_y + 131), (84, btn_y + 119)], fill=(255, 255, 255))
+    draw.text((95, btn_y + 104), "Open in YouTube Studio", fill=(255, 255, 255), font=FONT_HEADING)
     
-    # Save to Photos
-    draw.rounded_rectangle((40, btn_y + 170, W - 40, btn_y + 235), radius=16, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=2)
-    draw.text((W//2 - 95, btn_y + 188), "Save to Device Photos", fill=COLOR_TEXT, font=FONT_HEADING)
+    # 3) Share to Instagram (Magenta)
+    draw.rounded_rectangle((30, btn_y + 172, W - 30, btn_y + 236), radius=18, fill=(225, 48, 108))
+    draw.text((W//2 - 95, btn_y + 188), "Share to Instagram", fill=(255, 255, 255), font=FONT_HEADING)
     
-    # Bottom Navigation Dock (MY SAVE active)
-    draw_bottom_dock(img, draw, active_idx=3)
+    # 4) Save to Photos Gallery
+    draw.rounded_rectangle((30, btn_y + 256, W - 30, btn_y + 320), radius=18, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=2)
+    draw.text((W//2 - 105, btn_y + 272), "Saved to Device Photos", fill=COLOR_TEXT, font=FONT_HEADING)
+    
+    # System bar pill (Samsung Galaxy S24 slim gesture bar)
+    draw.rectangle((0, H - 25, W, H), fill=(20, 19, 25))
+    draw.rounded_rectangle((W//2 - 55, H - 15, W//2 + 55, H - 10), radius=3, fill=(140, 140, 150))
     return img
 
 

@@ -298,32 +298,46 @@
 
       <div class="container ark-story-grid">
         <div class="ark-story-media-wrap">
-          <!-- Floating Cutout Dialog Modal Card -->
-          <div class="ark-cutout-modal-card">
+          <!-- Floating Cutout Interactive Studio Card -->
+          <div class="ark-cutout-modal-card" id="cutout-interactive-studio" aria-label="Interactive Cutout Studio Simulator">
             <div class="ark-modal-title-row">
               <span class="ark-modal-title">Background Eraser Studio</span>
-              <span class="ark-modal-badge">0.2s Isolation</span>
+              <span class="ark-modal-badge" id="cutout-status-badge">0.2s Auto Isolation</span>
             </div>
+            
+            <!-- Real Working HTML5 Range Slider -->
             <div class="ark-modal-slider-bar">
-              <span style="font-size:0.75rem; font-weight:700;">Threshold: 70</span>
-              <div class="ark-slider-track-mock">
-                <div class="ark-slider-fill-mock"></div>
-                <div class="ark-slider-thumb-mock"></div>
+              <div class="ark-slider-label-row">
+                <label for="cutout-threshold-range" class="ark-slider-label">Tolerance Threshold</label>
+                <span class="ark-slider-val" id="cutout-threshold-val">70%</span>
               </div>
+              <input type="range" 
+                     id="cutout-threshold-range" 
+                     class="ark-cutout-range-input" 
+                     min="10" 
+                     max="95" 
+                     value="70" 
+                     aria-label="Background removal threshold slider">
             </div>
-            <div class="ark-modal-modes-row">
-              <span class="ark-mode-pill is-active">⚡ Auto</span>
-              <span class="ark-mode-pill">✂ Lasso</span>
-              <span class="ark-mode-pill">🎯 Brush</span>
-              <span class="ark-mode-pill">↺ Restore</span>
-              <span class="ark-mode-pill">🔍 Zoom</span>
+
+            <!-- Real Interactive 5 Mode Buttons -->
+            <div class="ark-modal-modes-row" role="tablist" aria-label="Cutout Modes">
+              <button type="button" class="ark-mode-pill is-active" data-mode="auto" role="tab" aria-selected="true">⚡ Auto</button>
+              <button type="button" class="ark-mode-pill" data-mode="lasso" role="tab" aria-selected="false">✂ Lasso</button>
+              <button type="button" class="ark-mode-pill" data-mode="brush" role="tab" aria-selected="false">🎯 Brush</button>
+              <button type="button" class="ark-mode-pill" data-mode="restore" role="tab" aria-selected="false">↺ Restore</button>
+              <button type="button" class="ark-mode-pill" data-mode="zoom" role="tab" aria-selected="false">🔍 Zoom</button>
+            </div>
+
+            <div class="ark-cutout-mode-info" id="cutout-mode-info">
+              ⚡ <strong>Auto Mode:</strong> 1-tap instant color backdrop clearing with neural edge refine.
             </div>
           </div>
 
           <!-- Phone Chassis showing Cutout Workflow (Strict 9:19 Portrait Ratio - Samsung Galaxy S24) -->
           <div class="ark-phone ark-showcase-phone">
             <div class="ark-phone-screen">
-              <img src="/assets/images/app-screen-cutout.webp?v=s24" 
+              <img src="/assets/images/app-screen-cutout.webp?v=s24-full" 
                    alt="5-mode background removal eraser tool isolating subject with threshold control on Android" 
                    width="310" 
                    height="654" 
@@ -415,10 +429,29 @@
         <div class="ark-story-media-wrap">
           <div class="ark-decor-circle" aria-hidden="true"></div>
 
+          <!-- Floating Export Simulator Card -->
+          <div class="ark-export-floating-card" id="export-interactive-card" aria-label="Interactive Export Preset Simulator">
+            <div class="ark-export-card-header">
+              <span class="ark-export-badge">⚡ 1-Tap Export Engine</span>
+              <span class="ark-export-res" id="export-res-tag">1280 × 720 HD</span>
+            </div>
+            <div class="ark-export-presets-row" role="tablist" aria-label="Export Resolution Presets">
+              <button type="button" class="ark-preset-btn is-active" data-preset="yt" data-res="1280 × 720 HD" data-format="16:9 • 300 DPI">YouTube (16:9)</button>
+              <button type="button" class="ark-preset-btn" data-preset="shorts" data-res="1080 × 1920 4K" data-format="9:16 Shorts">Shorts (9:16)</button>
+              <button type="button" class="ark-preset-btn" data-preset="post" data-res="1080 × 1080 HD" data-format="1:1 Post">Square (1:1)</button>
+            </div>
+            <button type="button" class="ark-test-export-btn" id="btn-test-export">
+              <span>🚀 Test 1-Tap HD Export</span>
+            </button>
+            <div class="ark-export-status" id="export-status-feedback" aria-live="polite">
+              Ready: 1280×720 • Zero Compression • PNG
+            </div>
+          </div>
+
           <!-- Showcase Phone with Export Screen (Strict 9:19 Portrait Ratio - Samsung Galaxy S24) -->
           <div class="ark-phone ark-showcase-phone">
             <div class="ark-phone-screen">
-              <img src="/assets/images/app-screen-export.webp?v=s24" 
+              <img src="/assets/images/app-screen-export.webp?v=s24-full" 
                    alt="Pronto export of 1280x720 gaming thumbnail ready for YouTube Studio on Android" 
                    width="310" 
                    height="654" 

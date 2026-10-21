@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollReveal();
   initThumbnailStudio();
   initCompareSlider();
+  initCutoutInteractiveStudio();
+  initExportSimulator();
 });
 
 /**
@@ -517,4 +519,155 @@ function initScrollReveal() {
     el.style.setProperty('--reveal-delay', `${(index % 4) * 0.1}s`);
     observer.observe(el);
   });
+}
+
+/**
+ * Interactive Background Eraser Studio Widget.
+ * Connects the range slider to live threshold values, updates mode pills and descriptions.
+ */
+function initCutoutInteractiveStudio() {
+  const studio = document.getElementById('cutout-interactive-studio');
+  if (!studio) return;
+
+  const slider = studio.querySelector('#cutout-threshold-range');
+  const valDisplay = studio.querySelector('#cutout-threshold-val');
+  const modePills = studio.querySelectorAll('.ark-mode-pill');
+  const badge = studio.querySelector('#cutout-status-badge');
+  const desc = studio.querySelector('#cutout-mode-info');
+  const cutoutPhone = document.querySelector('.ark-section-cutout .ark-phone');
+
+  const modeData = {
+    auto: {
+      badge: '0.2s Auto Isolation',
+      desc: '⚡ <strong>Auto Mode:</strong> 1-tap instant color backdrop clearing with neural edge refine.',
+      defaultVal: 70
+    },
+    lasso: {
+      badge: 'Polygon Lasso Active',
+      desc: '✂ <strong>Lasso Mode:</strong> Trace freehand custom boundaries to cut inside or outside the polygon.',
+      defaultVal: 85
+    },
+    brush: {
+      badge: 'Offset Brush (30px)',
+      desc: '🎯 <strong>Manual Brush:</strong> Fine-tune fine hair strands with fingertip offset cursor guidance.',
+      defaultVal: 45
+    },
+    restore: {
+      badge: 'Smart Paint-Back',
+      desc: '↺ <strong>Restore Mode:</strong> Bring back accidentally erased subject details without restarting.',
+      defaultVal: 50
+    },
+    zoom: {
+      badge: 'Pixel Precision 400%',
+      desc: '🔍 <strong>Zoom Mode:</strong> Pinch & pan to inspect sub-pixel boundaries in razor-sharp detail.',
+      defaultVal: 100
+    }
+  };
+
+  // Live Slider Input
+  if (slider && valDisplay) {
+    function updateSliderVisual(val) {
+      valDisplay.textContent = `${val}%`;
+      const pct = ((val - slider.min) / (slider.max - slider.min)) * 100;
+      slider.style.background = `linear-gradient(to right, var(--ark-green) 0%, var(--ark-green) ${pct}%, #CBD5E1 ${pct}%, #CBD5E1 100%)`;
+      if (cutoutPhone) {
+        cutoutPhone.style.setProperty('--cutout-glow', `${(val / 70).toFixed(2)}`);
+      }
+    }
+
+    slider.addEventListener('input', (e) => {
+      updateSliderVisual(e.target.value);
+    });
+
+    updateSliderVisual(slider.value);
+  }
+
+  // Mode Buttons
+  modePills.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      modePills.forEach((p) => {
+        p.classList.remove('is-active');
+        p.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('is-active');
+      btn.setAttribute('aria-selected', 'true');
+
+      const modeKey = btn.getAttribute('data-mode') || 'auto';
+      const data = modeData[modeKey];
+      if (!data) return;
+
+      if (badge) badge.textContent = data.badge;
+      if (desc) desc.innerHTML = data.desc;
+      if (slider && valDisplay) {
+        slider.value = data.defaultVal;
+        slider.dispatchEvent(new Event('input'));
+      }
+    });
+  });
+}
+
+/**
+ * Interactive Export Simulator Widget in Section 5.
+ * Allows creators to test 1-tap export presets and experience instant YouTube Studio readiness.
+ */
+function initExportSimulator() {
+  const card = document.getElementById('export-interactive-card');
+  if (!card) return;
+
+  const presets = card.querySelectorAll('.ark-preset-btn');
+  const resTag = card.querySelector('#export-res-tag');
+  const testBtn = card.querySelector('#btn-test-export');
+  const feedback = card.querySelector('#export-status-feedback');
+
+  const presetData = {
+    yt: { res: '1280 × 720 HD', status: 'Ready: 1280×720 • Zero Compression • PNG (16:9)' },
+    shorts: { res: '1080 × 1920 4K', status: 'Ready: 1080×1920 • YouTube Shorts / Reels (9:16)' },
+    post: { res: '1080 × 1080 HD', status: 'Ready: 1080×1080 • Square Community Post (1:1)' }
+  };
+
+  presets.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      presets.forEach((p) => p.classList.remove('is-active'));
+      btn.classList.add('is-active');
+
+      const key = btn.getAttribute('data-preset') || 'yt';
+      const data = presetData[key];
+      if (!data) return;
+
+      if (resTag) resTag.textContent = data.res;
+      if (feedback) {
+        feedback.textContent = data.status;
+        feedback.classList.remove('is-active');
+      }
+    });
+  });
+
+  if (testBtn) {
+    let isExporting = false;
+    testBtn.addEventListener('click', () => {
+      if (isExporting) return;
+      isExporting = true;
+
+      const originalHtml = testBtn.innerHTML;
+      testBtn.innerHTML = '<span>⚡ Exporting in Full HD...</span>';
+      testBtn.style.opacity = '0.85';
+
+      setTimeout(() => {
+        testBtn.innerHTML = '<span>✓ Saved to Gallery (0.2s)</span>';
+        testBtn.classList.add('is-success');
+        testBtn.style.opacity = '1';
+
+        if (feedback) {
+          feedback.textContent = '✓ 1280×720 300 DPI PNG Saved • Ready for YouTube Studio!';
+          feedback.classList.add('is-active');
+        }
+
+        setTimeout(() => {
+          testBtn.innerHTML = originalHtml;
+          testBtn.classList.remove('is-success');
+          isExporting = false;
+        }, 2800);
+      }, 350);
+    });
+  }
 }
