@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initThumbnailStudio();
   initCompareSlider();
   initCutoutInteractiveStudio();
-  initHDThumbnailShowcase();
+  initHDThumbnailGallery();
   initExportSimulator();
 });
 
@@ -608,95 +608,52 @@ function initCutoutInteractiveStudio() {
 }
 
 /**
- * Interactive HD Thumbnail Showcase in Section 5 (Export in Full HD).
- * Allows creators to browse authentic 1280x720 HD thumbnails across YouTube categories
- * and simulate 1-tap HD export to gallery.
+ * Clean & Minimalist HD Thumbnail Gallery in Section 5 (Export in Full HD).
+ * Synchronizes category filter tabs, featured 16:9 stage, and visual thumbnail strip.
  */
-function initHDThumbnailShowcase() {
-  const showcase = document.querySelector('.ark-hd-showcase-wrap');
-  if (!showcase) return;
+function initHDThumbnailGallery() {
+  const card = document.getElementById('hd-gallery-card');
+  if (!card) return;
 
-  const thumbButtons = showcase.querySelectorAll('.ark-hd-thumb-item');
-  const activeImg = document.getElementById('hd-active-img');
-  const activeTitle = document.getElementById('hd-active-title');
-  const activeCat = document.getElementById('hd-active-cat');
-  const activeBadge = document.getElementById('hd-active-badge');
-  const downloadSimBtn = document.getElementById('btn-hd-download-sim');
-  const exportFeedback = document.getElementById('hd-export-feedback');
+  const tabs = card.querySelectorAll('.ark-tab-btn');
+  const stripItems = card.querySelectorAll('.ark-strip-item');
+  const stageImg = document.getElementById('gallery-active-img');
 
-  thumbButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      thumbButtons.forEach((b) => {
-        b.classList.remove('is-active');
-        b.setAttribute('aria-selected', 'false');
-      });
-      btn.classList.add('is-active');
-      btn.setAttribute('aria-selected', 'true');
-
-      const src = btn.getAttribute('data-src');
-      const title = btn.getAttribute('data-title');
-      const cat = btn.getAttribute('data-cat');
-      const badge = btn.getAttribute('data-badge');
-
-      if (activeImg && src) {
-        activeImg.style.transition = 'opacity 0.16s ease, transform 0.16s ease';
-        activeImg.style.opacity = '0.35';
-        activeImg.style.transform = 'scale(0.985)';
-        setTimeout(() => {
-          activeImg.src = src;
-          activeImg.alt = `${title} - Full HD 1280x720 YouTube Thumbnail export preview`;
-          activeImg.style.opacity = '1';
-          activeImg.style.transform = 'scale(1)';
-        }, 140);
-      }
-
-      if (activeTitle && title) {
-        activeTitle.innerHTML = title;
-      }
-      if (activeCat && cat) {
-        activeCat.innerHTML = cat;
-      }
-      if (activeBadge && badge) {
-        activeBadge.innerHTML = badge;
-      }
-      if (exportFeedback) {
-        exportFeedback.textContent = '✓ Verified YouTube Studio Ready';
-        exportFeedback.style.color = 'var(--ark-accent-green)';
-      }
+  function setActive(index) {
+    tabs.forEach((tab, i) => {
+      const isActive = i === index;
+      tab.classList.toggle('is-active', isActive);
+      tab.setAttribute('aria-selected', String(isActive));
     });
+
+    stripItems.forEach((item, i) => {
+      const isActive = i === index;
+      item.classList.toggle('is-active', isActive);
+      item.setAttribute('aria-selected', String(isActive));
+    });
+
+    const activeTab = tabs[index];
+    if (stageImg && activeTab) {
+      const src = activeTab.getAttribute('data-src');
+      const title = activeTab.getAttribute('data-title') || 'Thumbnail';
+      stageImg.style.opacity = '0.35';
+      stageImg.style.transform = 'scale(0.985)';
+      setTimeout(() => {
+        stageImg.src = src;
+        stageImg.alt = `${title} - Full HD 1280x720 YouTube Thumbnail export preview`;
+        stageImg.style.opacity = '1';
+        stageImg.style.transform = 'scale(1)';
+      }, 120);
+    }
+  }
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => setActive(index));
   });
 
-  if (downloadSimBtn) {
-    let isExporting = false;
-    downloadSimBtn.addEventListener('click', () => {
-      if (isExporting) return;
-      isExporting = true;
-
-      const originalHtml = downloadSimBtn.innerHTML;
-      downloadSimBtn.innerHTML = '<span>⚡ Exporting Full HD (1280×720)...</span>';
-      downloadSimBtn.style.opacity = '0.85';
-
-      setTimeout(() => {
-        downloadSimBtn.innerHTML = '<span>✓ Saved to Gallery (0.18s)</span>';
-        downloadSimBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-        downloadSimBtn.style.borderColor = '#10b981';
-        downloadSimBtn.style.color = '#ffffff';
-
-        if (exportFeedback) {
-          exportFeedback.textContent = '✓ Saved in 1280×720 PNG (300 DPI) • Zero Compression!';
-          exportFeedback.style.color = '#10b981';
-        }
-
-        setTimeout(() => {
-          downloadSimBtn.innerHTML = originalHtml;
-          downloadSimBtn.style.background = '';
-          downloadSimBtn.style.borderColor = '';
-          downloadSimBtn.style.color = '';
-          isExporting = false;
-        }, 2600);
-      }, 350);
-    });
-  }
+  stripItems.forEach((item, index) => {
+    item.addEventListener('click', () => setActive(index));
+  });
 }
 
 /**
