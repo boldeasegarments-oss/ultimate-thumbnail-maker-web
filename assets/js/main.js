@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initCurrentYear();
   init3DTilt();
   initHero3DParallax();
-  initHeroScreenSwitcher();
   initCursorGlowTracker();
   initScrollReveal();
   initThumbnailStudio();
@@ -141,7 +140,6 @@ function initCurrentYear() {
  * Attaches to any element with .card-3d or [data-tilt].
  */
 function init3DTilt() {
-  // Respect user preference for reduced motion
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     return;
   }
@@ -174,8 +172,8 @@ function init3DTilt() {
       const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
       const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
 
-      const x = (clientX - bounds.left) / bounds.width - 0.5; // -0.5 to 0.5
-      const y = (clientY - bounds.top) / bounds.height - 0.5; // -0.5 to 0.5
+      const x = (clientX - bounds.left) / bounds.width - 0.5;
+      const y = (clientY - bounds.top) / bounds.height - 0.5;
 
       const rotateX = (-y * maxTilt).toFixed(2);
       const rotateY = (x * maxTilt).toFixed(2);
@@ -203,7 +201,6 @@ function init3DTilt() {
     card.addEventListener('mousemove', onMouseMove);
     card.addEventListener('mouseleave', onMouseLeave);
 
-    // Support passive touch on mobile
     card.addEventListener('touchstart', onMouseEnter, { passive: true });
     card.addEventListener('touchmove', onMouseMove, { passive: true });
     card.addEventListener('touchend', onMouseLeave, { passive: true });
@@ -211,9 +208,80 @@ function init3DTilt() {
 }
 
 /**
+ * Modern 3D Parallax & Gyroscope Cursor Tracking for Ark7 Hero Duo Phones.
+ * Smoothly tilts the front phone and shifts the back phone in complementary 3D space.
+ */
+function initHero3DParallax() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return;
+  }
+
+  const heroSection = document.querySelector('.ark-hero');
+  const frontPhone = document.querySelector('.ark-phone--front');
+  const backPhone = document.querySelector('.ark-phone--back');
+  if (!heroSection || !frontPhone) return;
+
+  let currentX = 0, currentY = 0;
+  let targetX = 0, targetY = 0;
+  let isRunning = false;
+
+  function render() {
+    currentX += (targetX - currentX) * 0.08;
+    currentY += (targetY - currentY) * 0.08;
+
+    const rotX = (-currentY * 8).toFixed(2);
+    const rotY = (currentX * 10).toFixed(2);
+
+    frontPhone.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.02, 1.02, 1.02)`;
+
+    if (backPhone) {
+      const backRotX = (-currentY * 4).toFixed(2);
+      const backRotY = (currentX * 5).toFixed(2);
+      const backOffsetX = (-currentX * 15).toFixed(1);
+      const backOffsetY = (-currentY * 12).toFixed(1);
+      backPhone.style.transform = `rotate(-7deg) translate3d(${backOffsetX}px, ${backOffsetY}px, 0) scale(0.92) perspective(1200px) rotateX(${backRotX}deg) rotateY(${backRotY}deg)`;
+    }
+
+    if (Math.abs(targetX - currentX) > 0.001 || Math.abs(targetY - currentY) > 0.001) {
+      requestAnimationFrame(render);
+    } else {
+      isRunning = false;
+    }
+  }
+
+  function startRender() {
+    if (!isRunning) {
+      isRunning = true;
+      requestAnimationFrame(render);
+    }
+  }
+
+  heroSection.addEventListener('mousemove', (e) => {
+    const rect = heroSection.getBoundingClientRect();
+    targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    startRender();
+  });
+
+  heroSection.addEventListener('mouseleave', () => {
+    targetX = 0;
+    targetY = 0;
+    startRender();
+  });
+
+  // Mobile gyroscope tilt
+  if (window.DeviceOrientationEvent && window.matchMedia('(hover: none)').matches) {
+    window.addEventListener('deviceorientation', (e) => {
+      if (e.gamma === null || e.beta === null) return;
+      targetX = Math.max(-1, Math.min(1, e.gamma / 30));
+      targetY = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
+      startRender();
+    }, { passive: true });
+  }
+}
+
+/**
  * Interactive 3D Thumbnail Studio Sandbox.
- * Lets visitors test real creator workflows: swap category themes,
- * customize live headline text, switch fonts, and toggle 3D exploded layer view.
  */
 function initThumbnailStudio() {
   const studioRoot = document.getElementById('thumbnail-studio');
@@ -225,11 +293,9 @@ function initThumbnailStudio() {
   const headlineEl = studioRoot.querySelector('.studio-headline');
   const badgeEl = studioRoot.querySelector('.studio-badge-tag');
   const layerBg = studioRoot.querySelector('.studio-layer--bg');
-  const subjectSilhouette = studioRoot.querySelector('.studio-subject-silhouette');
   const categoryTabs = studioRoot.querySelectorAll('.studio-tab-btn');
   const stylePills = studioRoot.querySelectorAll('.studio-pill-btn');
 
-  // Preset themes configuration
   const themes = {
     gaming: {
       headline: 'EPIC BOSS DEFEATED!',
@@ -265,14 +331,12 @@ function initThumbnailStudio() {
     }
   };
 
-  // Set initial background image for gaming
   if (layerBg) {
     layerBg.style.backgroundImage = themes.gaming.bgImage;
     layerBg.style.backgroundSize = 'cover';
     layerBg.style.backgroundPosition = 'center';
   }
 
-  // Switch category theme
   categoryTabs.forEach((tab) => {
     tab.addEventListener('click', () => {
       categoryTabs.forEach((t) => t.classList.remove('is-active'));
@@ -302,7 +366,6 @@ function initThumbnailStudio() {
     });
   });
 
-  // Headline real-time input handler
   if (textInput && headlineEl) {
     textInput.addEventListener('input', (e) => {
       const val = e.target.value.trim();
@@ -310,7 +373,6 @@ function initThumbnailStudio() {
     });
   }
 
-  // Switch font style pills
   stylePills.forEach((pill) => {
     pill.addEventListener('click', () => {
       stylePills.forEach((p) => p.classList.remove('is-active'));
@@ -335,24 +397,15 @@ function initThumbnailStudio() {
     });
   });
 
-  // 3D Exploded Layer Mode Toggle
   if (toggle3DBtn && canvas) {
     toggle3DBtn.addEventListener('click', () => {
-      const isExploded = canvas.classList.toggle('is-exploded');
-      toggle3DBtn.classList.toggle('is-exploded-active', isExploded);
-
-      const statusText = toggle3DBtn.querySelector('.btn-label-text');
-      if (statusText) {
-        statusText.textContent = isExploded ? 'Switch to Flat 2D Mode' : 'Toggle 3D Exploded View';
-      }
+      canvas.classList.toggle('is-exploded');
     });
   }
 }
 
 /**
  * Draggable Before / After Cutout Comparison Slider.
- * Allows visitors to drag the slider handle with mouse or touch to see
- * raw background vs. clean background cutout side-by-side.
  */
 function initCompareSlider() {
   const sliders = document.querySelectorAll('.compare-slider-wrap');
@@ -368,7 +421,6 @@ function initCompareSlider() {
     function updateSlider(clientX) {
       const rect = slider.getBoundingClientRect();
       const rawPos = (clientX - rect.left) / rect.width;
-      // Clamp between 5% and 95%
       const clamped = Math.max(0.05, Math.min(0.95, rawPos));
       const percentage = (clamped * 100).toFixed(2);
 
@@ -401,7 +453,6 @@ function initCompareSlider() {
     window.addEventListener('touchmove', onPointerMove, { passive: true });
     window.addEventListener('touchend', onPointerUp, { passive: true });
 
-    // Keyboard accessibility: ArrowLeft / ArrowRight
     slider.addEventListener('keydown', (e) => {
       const currentVal = parseFloat(slider.getAttribute('aria-valuenow') || '50');
       let newVal = currentVal;
@@ -421,114 +472,10 @@ function initCompareSlider() {
 }
 
 /**
- * Modern 3D Parallax & Gyroscope Cursor Tracking for Hero Phone.
- * Smoothly tilts the physical smartphone chassis and offsets floating badges
- * along multi-plane Z-space using requestAnimationFrame spring interpolation.
- */
-function initHero3DParallax() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    return;
-  }
-
-  const heroGrid = document.querySelector('.hero-grid');
-  const heroPhone = document.querySelector('.hero-device-wrapper .phone-chassis');
-  const floatingCards = document.querySelectorAll('.floating-ui-card');
-  if (!heroGrid || !heroPhone) return;
-
-  let currentX = 0, currentY = 0;
-  let targetX = 0, targetY = 0;
-  let isRunning = false;
-
-  function render() {
-    currentX += (targetX - currentX) * 0.08;
-    currentY += (targetY - currentY) * 0.08;
-
-    const rotX = (-currentY * 12).toFixed(2);
-    const rotY = (currentX * 12).toFixed(2);
-
-    heroPhone.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.02, 1.02, 1.02)`;
-
-    floatingCards.forEach((card, index) => {
-      const depth = index === 0 ? 32 : 48;
-      const offsetX = (currentX * depth).toFixed(1);
-      const offsetY = (currentY * depth).toFixed(1);
-      card.style.transform = `perspective(1000px) translate3d(${offsetX}px, ${offsetY}px, ${depth}px)`;
-    });
-
-    if (Math.abs(targetX - currentX) > 0.001 || Math.abs(targetY - currentY) > 0.001) {
-      requestAnimationFrame(render);
-    } else {
-      isRunning = false;
-    }
-  }
-
-  function startRender() {
-    if (!isRunning) {
-      isRunning = true;
-      requestAnimationFrame(render);
-    }
-  }
-
-  heroGrid.addEventListener('mousemove', (e) => {
-    const rect = heroGrid.getBoundingClientRect();
-    targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-    targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-    startRender();
-  });
-
-  heroGrid.addEventListener('mouseleave', () => {
-    targetX = 0;
-    targetY = 0;
-    startRender();
-  });
-
-  // Support mobile gyroscope tilt
-  if (window.DeviceOrientationEvent && window.matchMedia('(hover: none)').matches) {
-    window.addEventListener('deviceorientation', (e) => {
-      if (e.gamma === null || e.beta === null) return;
-      targetX = Math.max(-1, Math.min(1, e.gamma / 30));
-      targetY = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
-      startRender();
-    }, { passive: true });
-  }
-}
-
-/**
- * Interactive Hero Screen Switcher.
- * Smoothly transitions the screenshot displayed inside the physical smartphone chassis.
- */
-function initHeroScreenSwitcher() {
-  const tabs = document.querySelectorAll('.phone-tab-btn');
-  const screenImg = document.querySelector('.hero-device-wrapper .phone-screen img');
-  if (!tabs.length || !screenImg) return;
-
-  tabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      tabs.forEach((t) => {
-        t.classList.remove('is-active');
-        t.setAttribute('aria-selected', 'false');
-      });
-      tab.classList.add('is-active');
-      tab.setAttribute('aria-selected', 'true');
-
-      const newSrc = tab.getAttribute('data-screen');
-      const newAlt = tab.getAttribute('data-title') || 'Preview';
-      if (!newSrc || screenImg.getAttribute('src') === newSrc) return;
-
-      screenImg.classList.remove('screen-transition');
-      void screenImg.offsetWidth; // Force CSS reflow
-      screenImg.setAttribute('src', newSrc);
-      screenImg.setAttribute('alt', newAlt);
-      screenImg.classList.add('screen-transition');
-    });
-  });
-}
-
-/**
- * Interactive Cursor Spotlight Glow Tracking for Bento & Review Cards.
+ * Interactive Cursor Spotlight Glow Tracking.
  */
 function initCursorGlowTracker() {
-  const cards = document.querySelectorAll('.bento-card, .review-card, .template-card, .phone-showcase-caption');
+  const cards = document.querySelectorAll('.bento-card, .review-card, .template-card, .ark-phone');
   if (!cards.length) return;
 
   cards.forEach((card) => {
@@ -543,14 +490,14 @@ function initCursorGlowTracker() {
 }
 
 /**
- * Modern Staggered Scroll Reveal Animations via IntersectionObserver.
+ * Modern Staggered Scroll Reveal Animations.
  */
 function initScrollReveal() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     return;
   }
 
-  const revealElements = document.querySelectorAll('.bento-card, .phone-showcase-card, .template-card, .review-card, .step-item');
+  const revealElements = document.querySelectorAll('.bento-card, .template-card, .review-card, .step-item, .ark-story-content, .ark-story-media-wrap');
   if (!revealElements.length || !('IntersectionObserver' in window)) return;
 
   const observer = new IntersectionObserver((entries) => {
