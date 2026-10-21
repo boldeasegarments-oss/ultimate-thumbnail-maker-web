@@ -429,6 +429,7 @@ function initCompareSlider() {
 
       afterWrap.style.width = `${percentage}%`;
       handle.style.left = `${percentage}%`;
+      slider.style.setProperty('--clip-pos', `${percentage}%`);
       slider.setAttribute('aria-valuenow', String(Math.round(clamped * 100)));
     }
 
@@ -469,6 +470,7 @@ function initCompareSlider() {
       e.preventDefault();
       afterWrap.style.width = `${newVal}%`;
       handle.style.left = `${newVal}%`;
+      slider.style.setProperty('--clip-pos', `${newVal}%`);
       slider.setAttribute('aria-valuenow', String(newVal));
     });
   });

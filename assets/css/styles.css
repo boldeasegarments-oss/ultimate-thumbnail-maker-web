@@ -1679,6 +1679,7 @@ body:not(:has(.ark-hero)) .mobile-toggle,
 
 /* Live Cutout Slider */
 .compare-slider-wrap {
+  --clip-pos: 50%;
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -1701,17 +1702,18 @@ body:not(:has(.ark-hero)) .mobile-toggle,
   position: absolute;
   top: 0;
   left: 0;
-  bottom: 0;
-  width: 50%;
-  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  clip-path: inset(0 calc(100% - var(--clip-pos, 50%)) 0 0);
   z-index: 2;
+  pointer-events: none;
 }
 
 .compare-after-wrap .compare-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  max-width: none;
+  display: block;
 }
 
 .compare-handle {
