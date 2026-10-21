@@ -32,7 +32,7 @@ COLOR_TEXT = (255, 255, 255)
 COLOR_TEXT_MUTED = (160, 160, 168)
 COLOR_CARD_BG = (42, 40, 52)
 
-# Real 16:9 thumbnail templates extracted directly from app cache
+# Real 16:9 thumbnail templates extracted directly from app cache (fills all rows completely)
 REAL_THUMBS_FEED = [
     "real_thumb_15_960x540.jpg",
     "real_thumb_8_960x540.jpg",
@@ -43,19 +43,25 @@ REAL_THUMBS_FEED = [
     "real_thumb_14_706x397.jpg",
     "real_thumb_16_706x397.jpg",
     "real_thumb_28_706x397.jpg",
-    "real_thumb_30_706x397.jpg"
+    "real_thumb_30_706x397.jpg",
+    "real_thumb_12_500x281.jpg",
+    "real_thumb_31_500x281.jpg"
 ]
 
 REAL_THUMBS_TEMPLATES = [
+    "real_thumb_18_500x281.jpg",
     "real_thumb_34_706x397.jpg",
     "real_thumb_21_706x397.jpg",
+    "real_thumb_19_500x281.jpg",
     "real_thumb_23_706x397.jpg",
+    "real_thumb_27_500x281.jpg",
     "real_thumb_4_500x281.jpg",
     "real_thumb_11_500x281.jpg",
-    "real_thumb_12_500x281.jpg",
-    "real_thumb_27_500x281.jpg",
     "real_thumb_9_500x281.jpg",
     "real_thumb_35_500x281.jpg",
+    "real_thumb_17_500x281.jpg",
+    "real_thumb_20_500x281.jpg",
+    "real_thumb_22_500x281.jpg",
     "real_thumb_24_500x281.jpg"
 ]
 
@@ -190,11 +196,11 @@ def make_hero_feed():
             img.paste(cimg, (cx, strip_y), cimg)
             
     # ---------------------------------------------------------
-    # Category Tabs Bar (Height 55px, at y = 300)
+    # Category Tabs Bar (Height 50px, at y = 295)
     # ---------------------------------------------------------
-    tabs_y = 300
-    draw.rectangle((0, tabs_y, W, tabs_y + 55), fill=COLOR_BAR)
-    draw.line((0, tabs_y + 55, W, tabs_y + 55), fill=COLOR_BAR_BORDER, width=1)
+    tabs_y = 295
+    draw.rectangle((0, tabs_y, W, tabs_y + 50), fill=COLOR_BAR)
+    draw.line((0, tabs_y + 50, W, tabs_y + 50), fill=COLOR_BAR_BORDER, width=1)
     
     cat_tabs = ["FITNESS", "GAMING", "MIX", "ART", "AUTOMOBILE"]
     tab_spacing = W // len(cat_tabs)
@@ -202,17 +208,18 @@ def make_hero_feed():
         tx = idx * tab_spacing + tab_spacing // 2
         is_active = (idx == 1) # GAMING active
         t_color = COLOR_TEXT if is_active else COLOR_TEXT_MUTED
-        draw.text((tx - len(tab_name)*5, tabs_y + 16), tab_name, fill=t_color, font=FONT_SMB)
+        draw.text((tx - len(tab_name)*5, tabs_y + 14), tab_name, fill=t_color, font=FONT_SMB)
         if is_active:
             # Cyan indicator line
-            draw.rectangle((tx - 32, tabs_y + 50, tx + 32, tabs_y + 54), fill=COLOR_ACCENT)
+            draw.rectangle((tx - 32, tabs_y + 46, tx + 32, tabs_y + 50), fill=COLOR_ACCENT)
             
     # ---------------------------------------------------------
-    # 2-Column Grid of 16:9 REAL Thumbnails (Exact App CardView Structure)
+    # 2-Column Grid of 16:9 REAL Thumbnails (Fills 100% of height down to bottom dock)
     # ---------------------------------------------------------
-    grid_y = 368
+    grid_y = 355
     cw, ch = 330, 186 # exact 16:9 ratio
     col_x = [20, 370] # 20px margin, 20px gap, 20px right margin (total 720)
+    gap_y = 12
     
     mask = Image.new("L", (cw, ch), 0)
     mdraw = ImageDraw.Draw(mask)
@@ -222,9 +229,9 @@ def make_hero_feed():
         col = idx % 2
         row = idx // 2
         gx = col_x[col]
-        gy = grid_y + row * (ch + 14)
+        gy = grid_y + row * (ch + gap_y)
         
-        if gy + ch > H - 140:
+        if gy >= 1420:
             break
             
         real_img = load_real_thumb(tfilename, cw, ch)
@@ -234,7 +241,7 @@ def make_hero_feed():
         # Paste real thumbnail image full-bleed inside card
         img.paste(real_img, (gx, gy), mask)
 
-    # Bottom Navigation Dock (CREATE active)
+    # Bottom Navigation Dock (Drawn over grid so cards flow seamlessly under dock)
     draw_bottom_dock(img, draw, active_idx=0)
     return img
 
@@ -281,10 +288,11 @@ def make_templates_screen():
         if is_active:
             draw.rectangle((tx - 28, tabs_y + 50, tx + 28, tabs_y + 54), fill=COLOR_ACCENT)
             
-    # 2-Column Grid of 16:9 REAL Youtube Cover Templates
-    grid_y = 205
+    # 2-Column Grid of 16:9 REAL Youtube Cover Templates (Fills 100% of height down to bottom dock)
+    grid_y = 198
     cw, ch = 330, 186
     col_x = [20, 370]
+    gap_y = 12
     
     mask = Image.new("L", (cw, ch), 0)
     mdraw = ImageDraw.Draw(mask)
@@ -294,9 +302,9 @@ def make_templates_screen():
         col = idx % 2
         row = idx // 2
         gx = col_x[col]
-        gy = grid_y + row * (ch + 14)
+        gy = grid_y + row * (ch + gap_y)
         
-        if gy + ch > H - 140:
+        if gy >= 1420:
             break
             
         real_img = load_real_thumb(tfilename, cw, ch)
