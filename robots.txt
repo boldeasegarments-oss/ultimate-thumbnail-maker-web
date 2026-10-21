@@ -1,0 +1,17 @@
+# Robots.txt for Ultimate Thumbnail Maker
+# Production Host: https://ultimatethumbnailmaker.pages.dev
+
+# Allow OpenAI SearchBot for ChatGPT Search discovery
+User-agent: OAI-SearchBot
+Allow: /
+
+# Disallow GPTBot from automated model scraping (optional crawler policy)
+User-agent: GPTBot
+Disallow: /
+
+# Allow all other standard search crawlers (Googlebot, Bingbot, Applebot, etc.)
+User-agent: *
+Allow: /
+
+# Canonical Sitemap Location
+Sitemap: https://ultimatethumbnailmaker.pages.dev/sitemap.xml
