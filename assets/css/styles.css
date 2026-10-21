@@ -2292,9 +2292,181 @@ body:not(:has(.ark-hero)) .mobile-toggle,
 }
 
 /* ==========================================================================
+   Subpage Showcase & Hero Components
+   ========================================================================== */
+.hero {
+  padding: 5rem 0 4rem;
+  background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 3.5rem;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.hero-content h1 {
+  font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--text-dark);
+  margin-bottom: 1.25rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+
+.hero-media {
+  position: relative;
+  width: 100%;
+}
+
+.card-3d-wrap {
+  position: relative;
+  width: 100%;
+  perspective: 1200px;
+}
+
+.showcase-frame {
+  position: relative;
+  margin: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #0F172A;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.14), 0 10px 20px -5px rgba(15, 23, 42, 0.06);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.showcase-frame:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 60px -12px rgba(15, 23, 42, 0.22), 0 15px 25px -5px rgba(6, 167, 74, 0.15);
+}
+
+.card-3d-inner {
+  position: relative;
+  overflow: hidden;
+}
+
+.showcase-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.showcase-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1.25rem;
+  background: #0F172A;
+  color: #94A3B8;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.showcase-caption span:first-child {
+  color: #F8FAFC;
+  font-weight: 700;
+}
+
+/* Floating Micro-Badges on Showcase */
+.floating-badge {
+  position: absolute;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.15rem;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-full);
+  color: #FFFFFF;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+  pointer-events: none;
+  animation: floatBadge 4s ease-in-out infinite alternate;
+}
+
+.floating-badge--top-left {
+  top: -14px;
+  left: -14px;
+}
+
+.floating-badge--bottom-right {
+  bottom: 24px;
+  right: -14px;
+  animation-delay: -2s;
+}
+
+@keyframes floatBadge {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-6px); }
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.pulse-emerald {
+  background: #10B981;
+  box-shadow: 0 0 10px #10B981;
+}
+
+.pulse-cyan {
+  background: #06B6D4;
+  box-shadow: 0 0 10px #06B6D4;
+}
+
+/* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
 @media (max-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  
+  .hero-content {
+    align-items: center;
+    text-align: center;
+  }
+  
+  .hero-actions {
+    justify-content: center;
+  }
+  
+  .floating-badge--top-left {
+    top: -10px;
+    left: 10px;
+  }
+  
+  .floating-badge--bottom-right {
+    bottom: 20px;
+    right: 10px;
+  }
   .ark-hero-grid,
   .ark-story-grid,
   .ark-story-grid--reverse {
