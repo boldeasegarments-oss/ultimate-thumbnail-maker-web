@@ -424,24 +424,22 @@ function initCompareSlider() {
 
     function updateSlider(clientX) {
       const rect = slider.getBoundingClientRect();
+      if (!rect.width) return;
       const rawPos = (clientX - rect.left) / rect.width;
       const clamped = Math.max(0.02, Math.min(0.98, rawPos));
       const percentage = (clamped * 100).toFixed(2);
 
-      afterWrap.style.width = `${percentage}%`;
       handle.style.left = `${percentage}%`;
       slider.style.setProperty('--clip-pos', `${percentage}%`);
       slider.setAttribute('aria-valuenow', String(Math.round(clamped * 100)));
     }
 
-    // Modern Unified Pointer Events with setPointerCapture
     slider.addEventListener('pointerdown', (e) => {
+      if (e.button !== undefined && e.button !== 0) return;
       isDragging = true;
       try {
         slider.setPointerCapture(e.pointerId);
-      } catch (err) {
-        // Fallback for environments where pointer capture isn't supported
-      }
+      } catch (err) {}
       updateSlider(e.clientX);
     });
 
@@ -463,20 +461,26 @@ function initCompareSlider() {
 
     slider.addEventListener('pointerup', endDrag);
     slider.addEventListener('pointercancel', endDrag);
+    slider.addEventListener('lostpointercapture', () => {
+      isDragging = false;
+    });
 
-    // Keyboard support
+    // Keyboard accessibility support
     slider.addEventListener('keydown', (e) => {
       const currentVal = parseFloat(slider.getAttribute('aria-valuenow') || '50');
       let newVal = currentVal;
-      if (e.key === 'ArrowLeft') {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
         newVal = Math.max(5, currentVal - 5);
-      } else if (e.key === 'ArrowRight') {
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
         newVal = Math.min(95, currentVal + 5);
+      } else if (e.key === 'Home') {
+        newVal = 5;
+      } else if (e.key === 'End') {
+        newVal = 95;
       } else {
         return;
       }
       e.preventDefault();
-      afterWrap.style.width = `${newVal}%`;
       handle.style.left = `${newVal}%`;
       slider.style.setProperty('--clip-pos', `${newVal}%`);
       slider.setAttribute('aria-valuenow', String(newVal));
