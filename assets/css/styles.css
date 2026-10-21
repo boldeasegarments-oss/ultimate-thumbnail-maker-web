@@ -1733,6 +1733,338 @@ tr:last-child td {
   font-weight: 600;
 }
 
+/* --- Multi-Layered 3D Card Container (Cardsapp Signature Style) --- */
+.layered-card-wrap {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.layer-shadow,
+.layer-shadow--3,
+.layer-shadow--2,
+.layer-shadow--1 {
+  position: absolute;
+  border-radius: 28px;
+  pointer-events: none;
+}
+
+.layer-shadow--3 {
+  inset: -12px;
+  transform: translateY(22px);
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.45), rgba(79, 70, 229, 0.3));
+  opacity: 0.55;
+  z-index: 1;
+}
+
+.layer-shadow--2 {
+  inset: -8px;
+  transform: translateY(14px);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.55), rgba(99, 102, 241, 0.4));
+  opacity: 0.7;
+  z-index: 2;
+}
+
+.layer-shadow--1 {
+  inset: -4px;
+  transform: translateY(7px);
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.65), rgba(129, 140, 248, 0.5));
+  opacity: 0.85;
+  z-index: 3;
+}
+
+.layered-card-main {
+  position: relative;
+  z-index: 4;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+  overflow: hidden;
+}
+
+/* Elevated App Icon with Multi-Layered Shadows (Cardsapp Style) */
+.hero-header-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.app-icon-elevated {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.icon-shadow-2 {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  transform: translate(6px, 8px);
+  background: rgba(220, 38, 38, 0.5);
+  opacity: 0.75;
+}
+
+.icon-shadow-1 {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  transform: translate(3px, 4px);
+  background: rgba(99, 102, 241, 0.7);
+  opacity: 0.85;
+}
+
+.main-app-icon {
+  position: relative;
+  z-index: 2;
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  display: block;
+}
+
+.hero-header-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.hero-rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  width: fit-content;
+}
+
+.hero-rating-badge .stars {
+  color: #f59e0b;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+}
+
+.hero-rating-badge strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* --- Horizontal Scrollable Screenshot Gallery (Cardsapp Signature) --- */
+.screenshot-section {
+  padding: 5rem 0;
+  position: relative;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.screenshot-gallery-container {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 1.5rem 0 2.5rem;
+  margin: 0 -1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.screenshot-gallery-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.screenshot-gallery-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.screenshot-gallery-container::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.5);
+  border-radius: 4px;
+}
+
+.screenshot-gallery-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.8);
+}
+
+.screenshot-gallery-track {
+  display: flex;
+  gap: 2.25rem;
+  min-width: max-content;
+  padding: 0.5rem 0.5rem 1.5rem;
+}
+
+.screenshot-card {
+  position: relative;
+  flex-shrink: 0;
+  width: 288px;
+  transition: transform 0.25s ease;
+}
+
+.screenshot-card:hover {
+  transform: translateY(-8px);
+}
+
+.screenshot-card-shadow-2 {
+  position: absolute;
+  inset: -6px;
+  transform: translateY(12px);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.4), rgba(79, 70, 229, 0.3));
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.screenshot-card-shadow-1 {
+  position: absolute;
+  inset: -3px;
+  transform: translateY(6px);
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.5), rgba(99, 102, 241, 0.4));
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.screenshot-card-main {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+  z-index: 3;
+}
+
+.screenshot-card-img {
+  width: 288px;
+  height: 512px;
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  display: block;
+}
+
+.screenshot-caption {
+  padding: 1.1rem 1.25rem;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.screenshot-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-cyan);
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.screenshot-caption-title {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.screenshot-caption-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin-bottom: 0;
+}
+
+/* --- Loved by Millions of Creators (Cardsapp Style Testimonials) --- */
+.reviews-section {
+  padding: 5rem 0;
+  position: relative;
+  background: var(--bg-secondary);
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+  margin-top: 2.5rem;
+}
+
+.review-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-normal), border-color var(--transition-normal);
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.review-stars {
+  color: #f59e0b;
+  font-size: 1.15rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 1rem;
+}
+
+.review-quote {
+  font-size: 0.96rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.review-author {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 1rem;
+}
+
+.review-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 1.1rem;
+}
+
+.review-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.review-subscribers {
+  font-size: 0.78rem;
+  color: var(--accent-cyan);
+}
+
 /* --- Responsive Media Queries --- */
 @media (max-width: 992px) {
   .hero-grid {
