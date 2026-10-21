@@ -231,9 +231,7 @@ function initThumbnailStudio() {
       headline: 'EPIC BOSS DEFEATED!',
       badge: '100% UNLOCKED',
       badgeColor: '#ef4444',
-      bgGradient: 'radial-gradient(circle at 75% 30%, #312e81 0%, #0a0f1d 75%)',
-      silhouetteGradient: 'linear-gradient(180deg, #38bdf8 0%, #6366f1 70%, #1e1b4b 100%)',
-      silhouetteFilter: 'drop-shadow(0 0 16px rgba(56, 189, 248, 0.7))',
+      bgImage: "url('/assets/templates/gaming-hardcore.webp')",
       textColor: '#ffeb3b',
       textShadow: '3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 0 4px 18px rgba(255, 235, 59, 0.6)'
     },
@@ -241,9 +239,7 @@ function initThumbnailStudio() {
       headline: 'I SPENT 100 HOURS HERE',
       badge: 'VIRAL VLOG',
       badgeColor: '#e11d48',
-      bgGradient: 'radial-gradient(circle at 30% 30%, #881337 0%, #09090b 80%)',
-      silhouetteGradient: 'linear-gradient(180deg, #fbbf24 0%, #f43f5e 80%, #4c0519 100%)',
-      silhouetteFilter: 'drop-shadow(0 0 16px rgba(244, 63, 94, 0.7))',
+      bgImage: "url('/assets/templates/vlog-travel.webp')",
       textColor: '#ffffff',
       textShadow: '3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 0 4px 18px rgba(244, 63, 94, 0.6)'
     },
@@ -251,9 +247,7 @@ function initThumbnailStudio() {
       headline: "DON'T BUY THIS YET!",
       badge: 'ULTIMATE REVIEW',
       badgeColor: '#059669',
-      bgGradient: 'radial-gradient(circle at 80% 20%, #064e3b 0%, #022c22 80%)',
-      silhouetteGradient: 'linear-gradient(180deg, #34d399 0%, #059669 80%, #064e3b 100%)',
-      silhouetteFilter: 'drop-shadow(0 0 16px rgba(52, 211, 153, 0.7))',
+      bgImage: "url('/assets/templates/tech-review.webp')",
       textColor: '#34d399',
       textShadow: '3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 0 4px 18px rgba(52, 211, 153, 0.6)'
     },
@@ -261,13 +255,18 @@ function initThumbnailStudio() {
       headline: 'PRO MASTERCLASS 2026',
       badge: 'STEP-BY-STEP',
       badgeColor: '#7c3aed',
-      bgGradient: 'radial-gradient(circle at 60% 40%, #4c1d95 0%, #0f172a 80%)',
-      silhouetteGradient: 'linear-gradient(180deg, #c084fc 0%, #7e22ce 80%, #3b0764 100%)',
-      silhouetteFilter: 'drop-shadow(0 0 16px rgba(192, 132, 252, 0.7))',
+      bgImage: "url('/assets/templates/pro-editor.webp')",
       textColor: '#f0abfc',
       textShadow: '3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 0 4px 18px rgba(192, 132, 252, 0.6)'
     }
   };
+
+  // Set initial background image for gaming
+  if (layerBg) {
+    layerBg.style.backgroundImage = themes.gaming.bgImage;
+    layerBg.style.backgroundSize = 'cover';
+    layerBg.style.backgroundPosition = 'center';
+  }
 
   // Switch category theme
   categoryTabs.forEach((tab) => {
@@ -292,11 +291,9 @@ function initThumbnailStudio() {
         badgeEl.style.backgroundColor = theme.badgeColor;
       }
       if (layerBg) {
-        layerBg.style.background = theme.bgGradient;
-      }
-      if (subjectSilhouette) {
-        subjectSilhouette.style.background = theme.silhouetteGradient;
-        subjectSilhouette.style.filter = theme.silhouetteFilter;
+        layerBg.style.backgroundImage = theme.bgImage;
+        layerBg.style.backgroundSize = 'cover';
+        layerBg.style.backgroundPosition = 'center';
       }
     });
   });
@@ -319,15 +316,20 @@ function initThumbnailStudio() {
       if (!headlineEl) return;
 
       if (style === 'impact') {
-        headlineEl.style.letterSpacing = '-0.02em';
+        headlineEl.style.fontFamily = "'Bebas Neue', sans-serif";
+        headlineEl.style.letterSpacing = '0.02em';
         headlineEl.style.textTransform = 'uppercase';
-        headlineEl.style.fontStyle = 'normal';
       } else if (style === 'italic') {
+        headlineEl.style.fontFamily = "'The Bold Font', sans-serif";
         headlineEl.style.letterSpacing = '-0.01em';
         headlineEl.style.textTransform = 'uppercase';
-        headlineEl.style.fontStyle = 'italic';
       } else if (style === 'cyber') {
-        headlineEl.style.letterSpacing = '0.04em';
+        headlineEl.style.fontFamily = "system-ui, sans-serif";
+        headlineEl.style.letterSpacing = '0.05em';
+        headlineEl.style.textTransform = 'uppercase';
+      }
+    });
+  });
         headlineEl.style.textTransform = 'uppercase';
         headlineEl.style.fontStyle = 'normal';
       }
