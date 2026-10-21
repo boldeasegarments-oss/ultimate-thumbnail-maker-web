@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initPlayStoreTracking();
   initCurrentYear();
   init3DTilt();
+  initHero3DParallax();
+  initHeroScreenSwitcher();
+  initCursorGlowTracker();
+  initScrollReveal();
   initThumbnailStudio();
   initCompareSlider();
 });
@@ -330,11 +334,6 @@ function initThumbnailStudio() {
       }
     });
   });
-        headlineEl.style.textTransform = 'uppercase';
-        headlineEl.style.fontStyle = 'normal';
-      }
-    });
-  });
 
   // 3D Exploded Layer Mode Toggle
   if (toggle3DBtn && canvas) {
@@ -418,5 +417,157 @@ function initCompareSlider() {
       handle.style.left = `${newVal}%`;
       slider.setAttribute('aria-valuenow', String(newVal));
     });
+  });
+}
+
+/**
+ * Modern 3D Parallax & Gyroscope Cursor Tracking for Hero Phone.
+ * Smoothly tilts the physical smartphone chassis and offsets floating badges
+ * along multi-plane Z-space using requestAnimationFrame spring interpolation.
+ */
+function initHero3DParallax() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return;
+  }
+
+  const heroGrid = document.querySelector('.hero-grid');
+  const heroPhone = document.querySelector('.hero-device-wrapper .phone-chassis');
+  const floatingCards = document.querySelectorAll('.floating-ui-card');
+  if (!heroGrid || !heroPhone) return;
+
+  let currentX = 0, currentY = 0;
+  let targetX = 0, targetY = 0;
+  let isRunning = false;
+
+  function render() {
+    currentX += (targetX - currentX) * 0.08;
+    currentY += (targetY - currentY) * 0.08;
+
+    const rotX = (-currentY * 12).toFixed(2);
+    const rotY = (currentX * 12).toFixed(2);
+
+    heroPhone.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.02, 1.02, 1.02)`;
+
+    floatingCards.forEach((card, index) => {
+      const depth = index === 0 ? 32 : 48;
+      const offsetX = (currentX * depth).toFixed(1);
+      const offsetY = (currentY * depth).toFixed(1);
+      card.style.transform = `perspective(1000px) translate3d(${offsetX}px, ${offsetY}px, ${depth}px)`;
+    });
+
+    if (Math.abs(targetX - currentX) > 0.001 || Math.abs(targetY - currentY) > 0.001) {
+      requestAnimationFrame(render);
+    } else {
+      isRunning = false;
+    }
+  }
+
+  function startRender() {
+    if (!isRunning) {
+      isRunning = true;
+      requestAnimationFrame(render);
+    }
+  }
+
+  heroGrid.addEventListener('mousemove', (e) => {
+    const rect = heroGrid.getBoundingClientRect();
+    targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    startRender();
+  });
+
+  heroGrid.addEventListener('mouseleave', () => {
+    targetX = 0;
+    targetY = 0;
+    startRender();
+  });
+
+  // Support mobile gyroscope tilt
+  if (window.DeviceOrientationEvent && window.matchMedia('(hover: none)').matches) {
+    window.addEventListener('deviceorientation', (e) => {
+      if (e.gamma === null || e.beta === null) return;
+      targetX = Math.max(-1, Math.min(1, e.gamma / 30));
+      targetY = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
+      startRender();
+    }, { passive: true });
+  }
+}
+
+/**
+ * Interactive Hero Screen Switcher.
+ * Smoothly transitions the screenshot displayed inside the physical smartphone chassis.
+ */
+function initHeroScreenSwitcher() {
+  const tabs = document.querySelectorAll('.phone-tab-btn');
+  const screenImg = document.querySelector('.hero-device-wrapper .phone-screen img');
+  if (!tabs.length || !screenImg) return;
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => {
+        t.classList.remove('is-active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('is-active');
+      tab.setAttribute('aria-selected', 'true');
+
+      const newSrc = tab.getAttribute('data-screen');
+      const newAlt = tab.getAttribute('data-title') || 'Preview';
+      if (!newSrc || screenImg.getAttribute('src') === newSrc) return;
+
+      screenImg.classList.remove('screen-transition');
+      void screenImg.offsetWidth; // Force CSS reflow
+      screenImg.setAttribute('src', newSrc);
+      screenImg.setAttribute('alt', newAlt);
+      screenImg.classList.add('screen-transition');
+    });
+  });
+}
+
+/**
+ * Interactive Cursor Spotlight Glow Tracking for Bento & Review Cards.
+ */
+function initCursorGlowTracker() {
+  const cards = document.querySelectorAll('.bento-card, .review-card, .template-card, .phone-showcase-caption');
+  if (!cards.length) return;
+
+  cards.forEach((card) => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+}
+
+/**
+ * Modern Staggered Scroll Reveal Animations via IntersectionObserver.
+ */
+function initScrollReveal() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return;
+  }
+
+  const revealElements = document.querySelectorAll('.bento-card, .phone-showcase-card, .template-card, .review-card, .step-item');
+  if (!revealElements.length || !('IntersectionObserver' in window)) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-revealed');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  revealElements.forEach((el, index) => {
+    el.classList.add('reveal-on-scroll');
+    el.style.setProperty('--reveal-delay', `${(index % 4) * 0.1}s`);
+    observer.observe(el);
   });
 }
