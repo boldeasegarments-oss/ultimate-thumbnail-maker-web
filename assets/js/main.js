@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initThumbnailStudio();
   initCompareSlider();
   initCutoutInteractiveStudio();
+  initHDThumbnailShowcase();
   initExportSimulator();
 });
 
@@ -604,6 +605,98 @@ function initCutoutInteractiveStudio() {
       }
     });
   });
+}
+
+/**
+ * Interactive HD Thumbnail Showcase in Section 5 (Export in Full HD).
+ * Allows creators to browse authentic 1280x720 HD thumbnails across YouTube categories
+ * and simulate 1-tap HD export to gallery.
+ */
+function initHDThumbnailShowcase() {
+  const showcase = document.querySelector('.ark-hd-showcase-wrap');
+  if (!showcase) return;
+
+  const thumbButtons = showcase.querySelectorAll('.ark-hd-thumb-item');
+  const activeImg = document.getElementById('hd-active-img');
+  const activeTitle = document.getElementById('hd-active-title');
+  const activeCat = document.getElementById('hd-active-cat');
+  const activeBadge = document.getElementById('hd-active-badge');
+  const downloadSimBtn = document.getElementById('btn-hd-download-sim');
+  const exportFeedback = document.getElementById('hd-export-feedback');
+
+  thumbButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      thumbButtons.forEach((b) => {
+        b.classList.remove('is-active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('is-active');
+      btn.setAttribute('aria-selected', 'true');
+
+      const src = btn.getAttribute('data-src');
+      const title = btn.getAttribute('data-title');
+      const cat = btn.getAttribute('data-cat');
+      const badge = btn.getAttribute('data-badge');
+
+      if (activeImg && src) {
+        activeImg.style.transition = 'opacity 0.16s ease, transform 0.16s ease';
+        activeImg.style.opacity = '0.35';
+        activeImg.style.transform = 'scale(0.985)';
+        setTimeout(() => {
+          activeImg.src = src;
+          activeImg.alt = `${title} - Full HD 1280x720 YouTube Thumbnail export preview`;
+          activeImg.style.opacity = '1';
+          activeImg.style.transform = 'scale(1)';
+        }, 140);
+      }
+
+      if (activeTitle && title) {
+        activeTitle.innerHTML = title;
+      }
+      if (activeCat && cat) {
+        activeCat.innerHTML = cat;
+      }
+      if (activeBadge && badge) {
+        activeBadge.innerHTML = badge;
+      }
+      if (exportFeedback) {
+        exportFeedback.textContent = '✓ Verified YouTube Studio Ready';
+        exportFeedback.style.color = 'var(--ark-accent-green)';
+      }
+    });
+  });
+
+  if (downloadSimBtn) {
+    let isExporting = false;
+    downloadSimBtn.addEventListener('click', () => {
+      if (isExporting) return;
+      isExporting = true;
+
+      const originalHtml = downloadSimBtn.innerHTML;
+      downloadSimBtn.innerHTML = '<span>⚡ Exporting Full HD (1280×720)...</span>';
+      downloadSimBtn.style.opacity = '0.85';
+
+      setTimeout(() => {
+        downloadSimBtn.innerHTML = '<span>✓ Saved to Gallery (0.18s)</span>';
+        downloadSimBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+        downloadSimBtn.style.borderColor = '#10b981';
+        downloadSimBtn.style.color = '#ffffff';
+
+        if (exportFeedback) {
+          exportFeedback.textContent = '✓ Saved in 1280×720 PNG (300 DPI) • Zero Compression!';
+          exportFeedback.style.color = '#10b981';
+        }
+
+        setTimeout(() => {
+          downloadSimBtn.innerHTML = originalHtml;
+          downloadSimBtn.style.background = '';
+          downloadSimBtn.style.borderColor = '';
+          downloadSimBtn.style.color = '';
+          isExporting = false;
+        }, 2600);
+      }, 350);
+    });
+  }
 }
 
 /**

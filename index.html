@@ -426,37 +426,145 @@
           </a>
         </div>
 
-        <div class="ark-story-media-wrap">
-          <div class="ark-decor-circle" aria-hidden="true"></div>
+        <!-- High-Definition YouTube Thumbnail Showcase (NO Mobile Device!) -->
+        <div class="ark-hd-showcase-wrap" aria-label="HD YouTube Thumbnail Gallery Showcase">
+          <!-- Featured Active HD Preview Card -->
+          <div class="ark-hd-hero-card" id="hd-hero-card">
+            <div class="ark-hd-card-header">
+              <div class="ark-hd-badge-group">
+                <span class="ark-hd-pill ark-hd-pill--accent" id="hd-active-badge">FITNESS &bull; 14.8% CTR</span>
+                <span class="ark-hd-pill ark-hd-pill--verified">✓ 0 Watermarks</span>
+              </div>
+              <span class="ark-hd-res-tag">1280 &times; 720 HD</span>
+            </div>
 
-          <!-- Floating Export Simulator Card -->
-          <div class="ark-export-floating-card" id="export-interactive-card" aria-label="Interactive Export Preset Simulator">
-            <div class="ark-export-card-header">
-              <span class="ark-export-badge">⚡ 1-Tap Export Engine</span>
-              <span class="ark-export-res" id="export-res-tag">1280 × 720 HD</span>
+            <!-- Main High-Res 16:9 Display Frame -->
+            <div class="ark-hd-image-frame">
+              <img id="hd-active-img" 
+                   src="/assets/images/hd-exports/thumb-fitness-1280x720.webp" 
+                   alt="Full HD 1280x720 YouTube Thumbnail export preview ready for YouTube Studio" 
+                   width="1280" 
+                   height="720" 
+                   loading="lazy">
+              <div class="ark-hd-overlay-specs">
+                <span class="ark-hd-format-tag">PNG &bull; 300 DPI &bull; 16:9</span>
+                <button type="button" class="ark-hd-sim-btn" id="btn-hd-download-sim">
+                  <span>⚡ Test 1-Tap HD Export</span>
+                </button>
+              </div>
             </div>
-            <div class="ark-export-presets-row" role="tablist" aria-label="Export Resolution Presets">
-              <button type="button" class="ark-preset-btn is-active" data-preset="yt" data-res="1280 × 720 HD" data-format="16:9 • 300 DPI">YouTube (16:9)</button>
-              <button type="button" class="ark-preset-btn" data-preset="shorts" data-res="1080 × 1920 4K" data-format="9:16 Shorts">Shorts (9:16)</button>
-              <button type="button" class="ark-preset-btn" data-preset="post" data-res="1080 × 1080 HD" data-format="1:1 Post">Square (1:1)</button>
-            </div>
-            <button type="button" class="ark-test-export-btn" id="btn-test-export">
-              <span>🚀 Test 1-Tap HD Export</span>
-            </button>
-            <div class="ark-export-status" id="export-status-feedback" aria-live="polite">
-              Ready: 1280×720 • Zero Compression • PNG
+            
+            <div class="ark-hd-card-footer">
+              <div class="ark-hd-meta">
+                <strong id="hd-active-title">Muscle Tonin &bull; Watch Now</strong>
+                <span id="hd-active-cat">Optimized for High-CTR YouTube Impressions</span>
+              </div>
+              <span class="ark-hd-status-text" id="hd-export-feedback">✓ Verified YouTube Studio Ready</span>
             </div>
           </div>
 
-          <!-- Showcase Phone with Export Screen (Strict 9:19 Portrait Ratio - Samsung Galaxy S24) -->
-          <div class="ark-phone ark-showcase-phone">
-            <div class="ark-phone-screen">
-              <img src="/assets/images/app-screen-export.webp?v=s24-full" 
-                   alt="Pronto export of 1280x720 gaming thumbnail ready for YouTube Studio on Android" 
-                   width="310" 
-                   height="654" 
-                   loading="lazy">
-            </div>
+          <!-- Interactive List of HD Thumbnails -->
+          <div class="ark-hd-list-header">
+            <span class="ark-hd-list-title">Explore Exported HD Covers:</span>
+            <span class="ark-hd-list-sub">Click any thumbnail to inspect in 1280&times;720 HD</span>
+          </div>
+
+          <div class="ark-hd-thumbs-list" role="tablist" aria-label="HD Thumbnail Presets List">
+            <!-- Item 1: Fitness -->
+            <button type="button" 
+                    class="ark-hd-thumb-item is-active" 
+                    data-title="Muscle Tonin &bull; Watch Now" 
+                    data-cat="Fitness &amp; Workout &bull; 14.8% CTR" 
+                    data-badge="FITNESS &bull; 14.8% CTR" 
+                    data-src="/assets/images/hd-exports/thumb-fitness-1280x720.webp" 
+                    role="tab" 
+                    aria-selected="true">
+              <img src="/assets/images/hd-exports/thumb-fitness-1280x720.webp" alt="Fitness thumbnail" width="160" height="90" loading="lazy">
+              <div class="ark-hd-item-info">
+                <strong>Fitness Workout</strong>
+                <span>1280&times;720 HD</span>
+              </div>
+            </button>
+
+            <!-- Item 2: Gaming -->
+            <button type="button" 
+                    class="ark-hd-thumb-item" 
+                    data-title="Hardcore Boss Defeated" 
+                    data-cat="Gaming &amp; Esports &bull; 16.2% CTR" 
+                    data-badge="GAMING &bull; 16.2% CTR" 
+                    data-src="/assets/images/hd-exports/thumb-gaming-1280x720.webp" 
+                    role="tab" 
+                    aria-selected="false">
+              <img src="/assets/images/hd-exports/thumb-gaming-1280x720.webp" alt="Gaming thumbnail" width="160" height="90" loading="lazy">
+              <div class="ark-hd-item-info">
+                <strong>Gaming Hardcore</strong>
+                <span>1280&times;720 HD</span>
+              </div>
+            </button>
+
+            <!-- Item 3: Vlog -->
+            <button type="button" 
+                    class="ark-hd-thumb-item" 
+                    data-title="I Spent 100 Hours Here" 
+                    data-cat="Vlogs &amp; Travel &bull; 15.5% CTR" 
+                    data-badge="VLOGS &bull; 15.5% CTR" 
+                    data-src="/assets/images/hd-exports/thumb-vlog-1280x720.webp" 
+                    role="tab" 
+                    aria-selected="false">
+              <img src="/assets/images/hd-exports/thumb-vlog-1280x720.webp" alt="Vlog thumbnail" width="160" height="90" loading="lazy">
+              <div class="ark-hd-item-info">
+                <strong>Viral Vlog</strong>
+                <span>1280&times;720 HD</span>
+              </div>
+            </button>
+
+            <!-- Item 4: Tech -->
+            <button type="button" 
+                    class="ark-hd-thumb-item" 
+                    data-title="Don't Buy This Yet" 
+                    data-cat="Tech &amp; Gadgets &bull; 13.9% CTR" 
+                    data-badge="TECH &bull; 13.9% CTR" 
+                    data-src="/assets/images/hd-exports/thumb-tech-1280x720.webp" 
+                    role="tab" 
+                    aria-selected="false">
+              <img src="/assets/images/hd-exports/thumb-tech-1280x720.webp" alt="Tech review thumbnail" width="160" height="90" loading="lazy">
+              <div class="ark-hd-item-info">
+                <strong>Tech Review</strong>
+                <span>1280&times;720 HD</span>
+              </div>
+            </button>
+
+            <!-- Item 5: Business -->
+            <button type="button" 
+                    class="ark-hd-thumb-item" 
+                    data-title="10K/Month Passive Income" 
+                    data-cat="Business &amp; Finance &bull; 14.1% CTR" 
+                    data-badge="BUSINESS &bull; 14.1% CTR" 
+                    data-src="/assets/images/hd-exports/thumb-business-1280x720.webp" 
+                    role="tab" 
+                    aria-selected="false">
+              <img src="/assets/images/hd-exports/thumb-business-1280x720.webp" alt="Finance thumbnail" width="160" height="90" loading="lazy">
+              <div class="ark-hd-item-info">
+                <strong>Passive Income</strong>
+                <span>1280&times;720 HD</span>
+              </div>
+            </button>
+
+            <!-- Item 6: Podcast -->
+            <button type="button" 
+                    class="ark-hd-thumb-item" 
+                    data-title="Creator Deep Dive Episode 42" 
+                    data-cat="Talk &amp; Podcast &bull; 12.8% CTR" 
+                    data-badge="PODCAST &bull; 12.8% CTR" 
+                    data-src="/assets/images/hd-exports/thumb-podcast-1280x720.webp" 
+                    role="tab" 
+                    aria-selected="false">
+              <img src="/assets/images/hd-exports/thumb-podcast-1280x720.webp" alt="Podcast thumbnail" width="160" height="90" loading="lazy">
+              <div class="ark-hd-item-info">
+                <strong>Creator Podcast</strong>
+                <span>1280&times;720 HD</span>
+              </div>
+            </button>
           </div>
         </div>
       </div>
