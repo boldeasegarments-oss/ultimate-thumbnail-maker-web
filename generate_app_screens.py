@@ -65,16 +65,25 @@ REAL_THUMBS_TEMPLATES = [
     "real_thumb_24_500x281.jpg"
 ]
 
+RES_DIR = os.path.join(APP_DIR, "res")
+
 def load_app_drawable(filename, size=None):
-    path = os.path.join(RES_NODPI, filename)
-    if not os.path.exists(path):
-        path = os.path.join(RES_DRAWABLE, filename)
-    if not os.path.exists(path):
-        return None
-    im = Image.open(path).convert("RGBA")
-    if size:
-        im = im.resize(size, Image.Resampling.LANCZOS)
-    return im
+    # Check direct folders first for performance
+    for folder in ["drawable-nodpi", "drawable", "drawable-xxhdpi", "drawable-xhdpi", "drawable-hdpi"]:
+        p = os.path.join(RES_DIR, folder, filename)
+        if os.path.exists(p):
+            im = Image.open(p).convert("RGBA")
+            if size:
+                im = im.resize(size, Image.Resampling.LANCZOS)
+            return im
+    # Fallback recursive search in res directory
+    for root, dirs, files in os.walk(RES_DIR):
+        if filename in files:
+            im = Image.open(os.path.join(root, filename)).convert("RGBA")
+            if size:
+                im = im.resize(size, Image.Resampling.LANCZOS)
+            return im
+    return None
 
 def load_real_thumb(filename, w=330, h=186):
     p = os.path.join(REAL_THUMB_DIR, filename)
@@ -319,124 +328,130 @@ def make_templates_screen():
 
 # =============================================================
 # 3. SCREEN: Multi-Layer Studio Editor (activity_poster.xml)
+# 100% Authentic to App: Canvas in Center of Screen, Real Header & Footer,
+# Layers Button at top-left, Real 4-Corner Sticker Handles, Ad-Free
 # =============================================================
 def make_editor_screen():
     img = Image.new("RGBA", (W, H), COLOR_BG)
     draw = ImageDraw.Draw(img)
     
-    # Top Bar: Background #2F2D3A (height 125px)
+    # ---------------------------------------------------------
+    # 1. TOP BAR (activity_poster.xml: header, height 125px)
+    # ---------------------------------------------------------
     draw.rectangle((0, 0, W, 125), fill=COLOR_BAR)
     draw.line((0, 125, W, 125), fill=COLOR_BAR_BORDER, width=1)
     draw_status_bar(draw, dark=False)
     
-    # Left: Back arrow and "Editor"
-    draw.polygon([(35, 84), (50, 72), (50, 96)], fill=COLOR_TEXT)
-    draw.line((40, 84, 65, 84), fill=COLOR_TEXT, width=4)
-    draw.text((85, 68), "Editor", fill=COLOR_TEXT, font=FONT_TITLE)
-    
-    # Right: Add layer '+', Save '💾', Overflow '⋮'
-    draw.line((W - 170, 84, W - 146, 84), fill=COLOR_TEXT, width=4)
-    draw.line((W - 158, 72, W - 158, 96), fill=COLOR_TEXT, width=4)
-    
-    save_icon = load_app_drawable("ic_save.png", (38, 38))
-    if save_icon:
-        img.paste(save_icon, (W - 125, 66), save_icon)
+    # Left: Back arrow (btn_new_back.png)
+    back_icon = load_app_drawable("btn_new_back.png", (36, 36))
+    if back_icon:
+        img.paste(back_icon, (24, 66), back_icon)
     else:
-        draw.rectangle((W - 125, 68, W - 95, 98), outline=COLOR_TEXT, width=2)
+        draw.polygon([(28, 84), (45, 72), (45, 96)], fill=COLOR_TEXT)
+        draw.line((35, 84, 55, 84), fill=COLOR_TEXT, width=4)
         
-    for my in [74, 84, 94]:
-        draw.ellipse((W - 60, my - 2, W - 56, my + 2), fill=COLOR_TEXT)
-        
-    # Quick Tool Strip: Background #282733 (height 65px)
-    tools_y = 135
-    draw.rectangle((0, tools_y, W, tools_y + 65), fill=(40, 39, 50))
-    draw.line((0, tools_y + 65, W, tools_y + 65), fill=COLOR_BAR_BORDER, width=1)
+    # Title: THUMBNAIL (txtheader in activity_poster.xml, all caps)
+    draw.text((75, 68), "THUMBNAIL", fill=COLOR_TEXT, font=FONT_TITLE)
     
-    # Undo icon
-    undo_icon = load_app_drawable("ic_undo_1.png", (32, 32))
+    # Right action buttons (activity_poster.xml: btn_undo, btn_redo, btn_erase, btn_done)
+    # 1) Undo
+    undo_icon = load_app_drawable("undo.png", (30, 30)) or load_app_drawable("ic_undo_1.png", (30, 30))
     if undo_icon:
-        img.paste(undo_icon, (45, tools_y + 16), undo_icon)
+        img.paste(undo_icon, (W - 200, 68), undo_icon)
         
-    # Redo icon
-    redo_icon = load_app_drawable("ic_redo_1.png", (32, 32))
+    # 2) Redo
+    redo_icon = load_app_drawable("redo.png", (30, 30)) or load_app_drawable("ic_redo_1.png", (30, 30))
     if redo_icon:
-        img.paste(redo_icon, (115, tools_y + 16), redo_icon)
+        img.paste(redo_icon, (W - 150, 68), redo_icon)
         
-    # Zoom icon
-    zoom_icon = load_app_drawable("ic_zoom.png", (32, 32))
-    if zoom_icon:
-        img.paste(zoom_icon, (185, tools_y + 16), zoom_icon)
+    # 3) Erase (btn_erase / ic_selected_eraser.png)
+    erase_icon = load_app_drawable("ic_selected_eraser.png", (30, 30))
+    if erase_icon:
+        img.paste(erase_icon, (W - 100, 68), erase_icon)
         
-    # Snap Grid icon
-    draw.rectangle((260, tools_y + 18, 290, tools_y + 48), outline=COLOR_TEXT_MUTED, width=2)
-    draw.line((275, tools_y + 18, 275, tools_y + 48), fill=COLOR_TEXT_MUTED, width=1)
-    draw.line((260, tools_y + 33, 290, tools_y + 33), fill=COLOR_TEXT_MUTED, width=1)
-    
-    # Layers stack icon
-    draw.polygon([(335, tools_y + 20), (355, tools_y + 12), (375, tools_y + 20), (355, tools_y + 28)], fill=COLOR_TEXT_MUTED)
-    draw.polygon([(335, tools_y + 30), (355, tools_y + 22), (375, tools_y + 30), (355, tools_y + 38)], fill=COLOR_TEXT_MUTED)
-    
-    # Layer Count Badge
-    draw.rounded_rectangle((W - 145, tools_y + 16, W - 35, tools_y + 50), radius=17, fill=COLOR_CARD_BG, outline=COLOR_ACCENT, width=1)
-    draw.text((W - 130, tools_y + 22), "4 LAYERS", fill=COLOR_ACCENT, font=FONT_SMB)
+    # 4) Download / Save (btn_done / btn_download vector)
+    tray_x, tray_y = W - 50, 83
+    draw.line((tray_x - 12, tray_y + 4, tray_x - 12, tray_y + 12), fill=COLOR_TEXT, width=3)
+    draw.line((tray_x - 12, tray_y + 12, tray_x + 12, tray_y + 12), fill=COLOR_TEXT, width=3)
+    draw.line((tray_x + 12, tray_y + 12, tray_x + 12, tray_y + 4), fill=COLOR_TEXT, width=3)
+    draw.line((tray_x, tray_y - 12, tray_x, tray_y + 5), fill=COLOR_TEXT, width=3)
+    draw.line((tray_x - 6, tray_y - 1, tray_x, tray_y + 6), fill=COLOR_TEXT, width=3)
+    draw.line((tray_x + 6, tray_y - 1, tray_x, tray_y + 6), fill=COLOR_TEXT, width=3)
 
     # ---------------------------------------------------------
-    # MAIN CANVAS (16:9 Aspect Ratio: 660 x 372 px) - Loaded with REAL Thumbnail!
+    # 2. WORKSPACE AREA (activity_poster.xml: lay_remove, y = 125 to 1390)
     # ---------------------------------------------------------
-    canv_w, canv_h = 660, 372
+    # Floating Layers button at top-left (btn_layControls / layers.png)
+    lay_btn_x, lay_btn_y = 24, 150
+    draw.rounded_rectangle((lay_btn_x, lay_btn_y, lay_btn_x + 56, lay_btn_y + 56), radius=16, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
+    layers_icon = load_app_drawable("layers.png", (38, 30))
+    if layers_icon:
+        img.paste(layers_icon, (lay_btn_x + 9, lay_btn_y + 13), layers_icon)
+
+    # ---------------------------------------------------------
+    # 3. MAIN CANVAS: STRICTLY CENTERED IN SCREEN (layout_centerInParent="true")
+    # Workspace height: 1390 - 125 = 1265px
+    # Center Y of workspace = 125 + 1265 // 2 = 757px
+    # Canvas size: 670 x 377 (exact 16:9 ratio)
+    # canv_y = 757 - 377 // 2 = 568px -> ends at 945px
+    # (Top gap = 443px, Bottom gap = 445px -> perfectly centered!)
+    # ---------------------------------------------------------
+    canv_w, canv_h = 670, 377
     canv_x = (W - canv_w) // 2
-    canv_y = 235
+    canv_y = 568
     
-    # Canvas drop shadow
+    # Elevation shadow & card outline
     draw.rounded_rectangle((canv_x - 4, canv_y - 4, canv_x + canv_w + 4, canv_y + canv_h + 4), radius=16, fill=(15, 14, 20))
+    draw.rounded_rectangle((canv_x - 1, canv_y - 1, canv_x + canv_w + 1, canv_y + canv_h + 1), radius=14, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
     
-    # Load High-Resolution REAL YouTube Thumbnail
+    # Real thumbnail image (Muscle Tonin Fitness template)
     real_canvas_source = load_real_thumb("real_thumb_15_960x540.jpg", canv_w, canv_h).convert("RGBA")
-    cd = ImageDraw.Draw(real_canvas_source)
-    
-    # Active selected bounding box around headline element
-    box_x1, box_y1 = 28, 35
-    box_x2, box_y2 = 360, 115
-    for dx in range(box_x1, box_x2, 12):
-        cd.line((dx, box_y1, min(dx + 6, box_x2), box_y1), fill=COLOR_ACCENT, width=3)
-        cd.line((dx, box_y2, min(dx + 6, box_x2), box_y2), fill=COLOR_ACCENT, width=3)
-    for dy in range(box_y1, box_y2, 12):
-        cd.line((box_x1, dy, box_x1, min(dy + 6, box_y2)), fill=COLOR_ACCENT, width=3)
-        cd.line((box_x2, dy, box_x2, min(dy + 6, box_y2)), fill=COLOR_ACCENT, width=3)
-        
-    # 4 Corner Handles matching app
-    cd.ellipse((box_x1 - 10, box_y1 - 10, box_x1 + 10, box_y1 + 10), fill=(239, 68, 68), outline=(255, 255, 255), width=2) # Delete
-    cd.ellipse((box_x2 - 10, box_y1 - 10, box_x2 + 10, box_y1 + 10), fill=COLOR_ACCENT, outline=(255, 255, 255), width=2) # Rotate
-    cd.ellipse((box_x2 - 10, box_y2 - 10, box_x2 + 10, box_y2 + 10), fill=COLOR_ACCENT, outline=(255, 255, 255), width=2) # Scale
-    cd.ellipse((box_x1 - 10, box_y2 - 10, box_x1 + 10, box_y2 + 10), fill=(245, 158, 11), outline=(255, 255, 255), width=2) # Lock
-    
-    # Paste Canvas onto Screen
     mask_c = Image.new("L", (canv_w, canv_h), 0)
     mdraw_c = ImageDraw.Draw(mask_c)
-    mdraw_c.rounded_rectangle((0, 0, canv_w, canv_h), radius=14, fill=255)
+    mdraw_c.rounded_rectangle((0, 0, canv_w, canv_h), radius=12, fill=255)
     img.paste(real_canvas_source, (canv_x, canv_y), mask_c)
     
-    # Floating Layer Inspector Card (below canvas)
-    insp_y = canv_y + canv_h + 25
-    draw.rounded_rectangle((canv_x, insp_y, canv_x + canv_w, insp_y + 110), radius=16, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
-    draw.text((canv_x + 20, insp_y + 18), "Selected Layer: Headline Text", fill=COLOR_TEXT, font=FONT_SMB)
-    draw.text((canv_x + 20, insp_y + 44), "Font: Nunito Bold • Size: 48 • Stroke: 4px Cyan", fill=COLOR_TEXT_MUTED, font=FONT_SM)
+    # ---------------------------------------------------------
+    # 4. ACTIVE ELEMENT BOUNDING BOX & REAL APP HANDLES (AutofitTextRel / StickerView)
+    # ---------------------------------------------------------
+    box_x1 = canv_x + 22
+    box_y1 = canv_y + 35
+    box_x2 = canv_x + 380
+    box_y2 = canv_y + 115
     
-    # Quick sliders: Opacity & Shadow
-    draw.text((canv_x + 20, insp_y + 72), "Opacity", fill=COLOR_TEXT_MUTED, font=FONT_SM)
-    draw.rounded_rectangle((canv_x + 90, insp_y + 78, canv_x + 290, insp_y + 86), radius=4, fill=(60, 58, 75))
-    draw.rounded_rectangle((canv_x + 90, insp_y + 78, canv_x + 270, insp_y + 86), radius=4, fill=COLOR_ACCENT)
-    draw.ellipse((canv_x + 265, insp_y + 73, canv_x + 279, insp_y + 91), fill=(255, 255, 255))
-    draw.text((canv_x + 305, insp_y + 72), "100%", fill=COLOR_TEXT, font=FONT_SM)
+    # Clean dashed cyan boundary
+    for dx in range(box_x1, box_x2, 12):
+        draw.line((dx, box_y1, min(dx + 6, box_x2), box_y1), fill=COLOR_ACCENT, width=2)
+        draw.line((dx, box_y2, min(dx + 6, box_x2), box_y2), fill=COLOR_ACCENT, width=2)
+    for dy in range(box_y1, box_y2, 12):
+        draw.line((box_x1, dy, box_x1, min(dy + 6, box_y2)), fill=COLOR_ACCENT, width=2)
+        draw.line((box_x2, dy, box_x2, min(dy + 6, box_y2)), fill=COLOR_ACCENT, width=2)
+        
+    # Real app handle icons (36x36 px)
+    h_size = (36, 36)
+    del_icon = load_app_drawable("sticker_delete1.png", h_size)
+    rot_icon = load_app_drawable("sticker_rotate.png", h_size)
+    scale_icon = load_app_drawable("sticker_scale.png", h_size)
+    flip_icon = load_app_drawable("sticker_flip.png", h_size)
     
-    draw.text((canv_x + 370, insp_y + 72), "Shadow", fill=COLOR_TEXT_MUTED, font=FONT_SM)
-    draw.rounded_rectangle((canv_x + 445, insp_y + 78, canv_x + 580, insp_y + 86), radius=4, fill=(60, 58, 75))
-    draw.rounded_rectangle((canv_x + 445, insp_y + 78, canv_x + 540, insp_y + 86), radius=4, fill=COLOR_ACCENT)
-    draw.ellipse((canv_x + 535, insp_y + 73, canv_x + 549, insp_y + 91), fill=(255, 255, 255))
-    draw.text((canv_x + 595, insp_y + 72), "+8", fill=COLOR_TEXT, font=FONT_SM)
+    # Top-Left: Delete (sticker_delete1.png)
+    if del_icon:
+        img.paste(del_icon, (box_x1 - 18, box_y1 - 18), del_icon)
+    # Top-Right: Rotate (sticker_rotate.png)
+    if rot_icon:
+        img.paste(rot_icon, (box_x2 - 18, box_y1 - 18), rot_icon)
+    # Bottom-Right: Scale (sticker_scale.png)
+    if scale_icon:
+        img.paste(scale_icon, (box_x2 - 18, box_y2 - 18), scale_icon)
+    # Bottom-Left: Flip (sticker_flip.png)
+    if flip_icon:
+        img.paste(flip_icon, (box_x1 - 18, box_y2 - 18), flip_icon)
 
-    # Bottom Editing Toolbar (5 Tools: Text, Sticker, Image, Effect, Background)
-    nav_h = 115
+    # ---------------------------------------------------------
+    # 5. BOTTOM EDITING TOOLBAR (activity_poster.xml: footer, height 105px)
+    # 5 Real tools: Text, Sticker, Image, Effect, Background
+    # ---------------------------------------------------------
+    nav_h = 105
     nav_y = H - nav_h - 25
     draw.rectangle((0, nav_y, W, nav_y + nav_h), fill=COLOR_BAR)
     draw.line((0, nav_y, W, nav_y), fill=COLOR_BAR_BORDER, width=1)
@@ -451,18 +466,18 @@ def make_editor_screen():
     tool_w = W // len(tools)
     for idx, (tfile, tlabel) in enumerate(tools):
         cx = idx * tool_w + tool_w // 2
-        is_active = (idx == 0) # Text active
+        is_active = (idx == 0) # Text tool active
         timg = load_app_drawable(tfile, (42, 42))
         if timg:
             img.paste(timg, (cx - 21, nav_y + 16), timg)
         else:
             draw.rectangle((cx - 18, nav_y + 16, cx + 18, nav_y + 52), fill=COLOR_ACCENT if is_active else COLOR_TEXT_MUTED)
-        t_color = COLOR_ACCENT if is_active else COLOR_TEXT_MUTED
+        t_color = COLOR_ACCENT if is_active else COLOR_TEXT
         draw.text((cx - len(tlabel)*4 - 4, nav_y + 68), tlabel, fill=t_color, font=FONT_SMB)
         if is_active:
             draw.rounded_rectangle((cx - 20, nav_y + 96, cx + 20, nav_y + 100), radius=2, fill=COLOR_ACCENT)
             
-    # System bar pill
+    # System bar pill (Samsung Galaxy S24 slim gesture bar)
     draw.rectangle((0, H - 25, W, H), fill=(20, 19, 25))
     draw.rounded_rectangle((W//2 - 55, H - 15, W//2 + 55, H - 10), radius=3, fill=(140, 140, 150))
     return img
