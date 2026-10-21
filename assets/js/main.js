@@ -409,6 +409,7 @@ function initThumbnailStudio() {
 
 /**
  * Draggable Before / After Cutout Comparison Slider.
+ * Unified Pointer Events API with pointer capture for unbreakable, smooth dragging on mouse and touch.
  */
 function initCompareSlider() {
   const sliders = document.querySelectorAll('.compare-slider-wrap');
@@ -424,7 +425,7 @@ function initCompareSlider() {
     function updateSlider(clientX) {
       const rect = slider.getBoundingClientRect();
       const rawPos = (clientX - rect.left) / rect.width;
-      const clamped = Math.max(0.05, Math.min(0.95, rawPos));
+      const clamped = Math.max(0.02, Math.min(0.98, rawPos));
       const percentage = (clamped * 100).toFixed(2);
 
       afterWrap.style.width = `${percentage}%`;
@@ -433,30 +434,37 @@ function initCompareSlider() {
       slider.setAttribute('aria-valuenow', String(Math.round(clamped * 100)));
     }
 
-    function onPointerDown(e) {
+    // Modern Unified Pointer Events with setPointerCapture
+    slider.addEventListener('pointerdown', (e) => {
       isDragging = true;
-      const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
-      updateSlider(clientX);
-    }
+      try {
+        slider.setPointerCapture(e.pointerId);
+      } catch (err) {
+        // Fallback for environments where pointer capture isn't supported
+      }
+      updateSlider(e.clientX);
+    });
 
-    function onPointerMove(e) {
+    slider.addEventListener('pointermove', (e) => {
       if (!isDragging) return;
-      const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
-      updateSlider(clientX);
+      updateSlider(e.clientX);
+    });
+
+    function endDrag(e) {
+      if (isDragging) {
+        isDragging = false;
+        try {
+          if (e && e.pointerId && slider.hasPointerCapture(e.pointerId)) {
+            slider.releasePointerCapture(e.pointerId);
+          }
+        } catch (err) {}
+      }
     }
 
-    function onPointerUp() {
-      isDragging = false;
-    }
+    slider.addEventListener('pointerup', endDrag);
+    slider.addEventListener('pointercancel', endDrag);
 
-    slider.addEventListener('mousedown', onPointerDown);
-    window.addEventListener('mousemove', onPointerMove);
-    window.addEventListener('mouseup', onPointerUp);
-
-    slider.addEventListener('touchstart', onPointerDown, { passive: true });
-    window.addEventListener('touchmove', onPointerMove, { passive: true });
-    window.addEventListener('touchend', onPointerUp, { passive: true });
-
+    // Keyboard support
     slider.addEventListener('keydown', (e) => {
       const currentVal = parseFloat(slider.getAttribute('aria-valuenow') || '50');
       let newVal = currentVal;

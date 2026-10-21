@@ -26,7 +26,7 @@
   <link rel="apple-touch-icon" href="/assets/images/app-icon.png">
   
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="/assets/css/styles.css?v=2.5">
+  <link rel="stylesheet" href="/assets/css/styles.css?v=2.6">
   
   <!-- Structured Data: WebSite Schema -->
   <script type="application/ld+json">
@@ -706,21 +706,23 @@
 
             <div class="compare-slider-wrap" role="slider" aria-label="Interactive before and after cutout comparison" aria-valuenow="50" aria-valuemin="5" aria-valuemax="95" tabindex="0">
               <!-- Background Image: After -->
-              <img src="/assets/images/cutout-slider-after.webp?v=real-hd" 
+              <img src="/assets/images/cutout-slider-after.webp?v=centered-cutout-1" 
                    alt="After: Clean cutout composited onto a high-contrast thumbnail background" 
                    class="compare-img compare-before" 
                    width="800" 
                    height="450" 
-                   loading="lazy">
+                   loading="lazy"
+                   draggable="false">
 
               <!-- Foreground Overlaid Image: Before -->
               <div class="compare-after-wrap">
-                <img src="/assets/images/cutout-slider-before.webp?v=real-hd" 
+                <img src="/assets/images/cutout-slider-before.webp?v=centered-cutout-1" 
                      alt="Before: Original photo with studio room background" 
                      class="compare-img" 
                      width="800" 
                      height="450" 
-                     loading="lazy">
+                     loading="lazy"
+                     draggable="false">
                 <span class="compare-label compare-label--after">BEFORE: ORIGINAL</span>
               </div>
 

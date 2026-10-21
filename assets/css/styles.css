@@ -1688,6 +1688,8 @@ body:not(:has(.ark-hero)) .mobile-toggle,
   box-shadow: var(--shadow-md);
   cursor: ew-resize;
   user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
   margin-bottom: 1rem;
 }
 
@@ -1696,6 +1698,10 @@ body:not(:has(.ark-hero)) .mobile-toggle,
   height: 100%;
   object-fit: cover;
   display: block;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
 }
 
 .compare-after-wrap {
@@ -1714,6 +1720,10 @@ body:not(:has(.ark-hero)) .mobile-toggle,
   height: 100%;
   object-fit: cover;
   display: block;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
 }
 
 .compare-handle {
