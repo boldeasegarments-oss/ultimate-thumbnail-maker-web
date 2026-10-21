@@ -29,7 +29,7 @@ COLOR_BAR = (47, 45, 58)         # #2F2D3A (Real App Action/Top Bar)
 COLOR_BAR_BORDER = (58, 55, 72)  # Subtle divider
 COLOR_ACCENT = (14, 172, 255)    # #0EACFF (Real App Active Cyan/Blue)
 COLOR_TEXT = (255, 255, 255)
-COLOR_TEXT_MUTED = (156, 163, 175)
+COLOR_TEXT_MUTED = (160, 160, 168)
 COLOR_CARD_BG = (42, 40, 52)
 
 # Real 16:9 thumbnail templates extracted directly from app cache
@@ -74,7 +74,6 @@ def load_real_thumb(filename, w=330, h=186):
     p = os.path.join(REAL_THUMB_DIR, filename)
     if os.path.exists(p):
         return Image.open(p).convert("RGB").resize((w, h), Image.Resampling.LANCZOS)
-    # Fallback to solid color if missing
     return Image.new("RGB", (w, h), (50, 48, 60))
 
 def draw_status_bar(draw, dark=False):
@@ -87,52 +86,68 @@ def draw_status_bar(draw, dark=False):
     draw.rounded_rectangle((W - 60, 22, W - 32, 42), radius=3, outline=text_color, width=2)
     draw.rectangle((W - 56, 26, W - 38, 38), fill=text_color)
     draw.rectangle((W - 32, 28, W - 30, 36), fill=text_color)
-    # Camera punch hole
-    draw.ellipse((W//2 - 12, 18, W//2 + 12, 42), fill=(15, 15, 18))
+    # Samsung Galaxy S24 Infinity-O Camera Punch Hole (ultra-sleek centered circle)
+    draw.ellipse((W//2 - 9, 20, W//2 + 9, 38), fill=(10, 10, 14), outline=(32, 32, 40), width=1)
+    draw.ellipse((W//2 - 3, 24, W//2 + 2, 29), fill=(40, 55, 80))
+
+def draw_real_app_menu_icon(draw, name, cx, cy, color, size=26):
+    """Exact vector reproduction of the app's ic_create, ic_collage, ic_edit, ic_save_icon"""
+    s = size // 2
+    if name == "CREATE":
+        # ic_create.xml: Rounded square frame with centered +
+        draw.rounded_rectangle((cx - s, cy - s, cx + s, cy + s), radius=4, outline=color, width=2)
+        draw.line((cx - s + 5, cy, cx + s - 5, cy), fill=color, width=2)
+        draw.line((cx, cy - s + 5, cx, cy + s - 5), fill=color, width=2)
+    elif name == "FRAME":
+        # ic_collage.xml: 4-pane photo frame
+        draw.rounded_rectangle((cx - s, cy - s, cx + s, cy + s), radius=4, outline=color, width=2)
+        draw.line((cx, cy - s, cx, cy + s), fill=color, width=2)
+        draw.line((cx - s, cy, cx + s, cy), fill=color, width=2)
+    elif name == "MY EDIT":
+        # ic_edit.xml: Pencil editing on a baseline
+        draw.line((cx - s, cy + s, cx + s, cy + s), fill=color, width=2)
+        draw.line((cx - s + 3, cy + s - 3, cx + s - 3, cy - s + 3), fill=color, width=3)
+        draw.polygon([(cx - s + 1, cy + s - 1), (cx - s + 5, cy + s - 1), (cx - s + 1, cy + s - 5)], fill=color)
+    elif name == "MY SAVE":
+        # ic_save_icon.xml: Photo frame with mountain peak and sun
+        draw.rounded_rectangle((cx - s, cy - s, cx + s, cy + s), radius=4, outline=color, width=2)
+        draw.ellipse((cx - s + 4, cy - s + 4, cx - s + 9, cy - s + 9), fill=color)
+        draw.polygon([(cx - s + 3, cy + s - 3), (cx - 1, cy), (cx + 5, cy + s - 3)], fill=color)
+        draw.polygon([(cx + 1, cy + s - 3), (cx + 6, cy + 2), (cx + s - 3, cy + s - 3)], fill=color)
 
 def draw_bottom_dock(img, draw, active_idx=0):
     nav_h = 105
     nav_y = H - nav_h - 25 # leave 25px for system bar
     draw.rectangle((0, nav_y, W, nav_y + nav_h), fill=COLOR_BAR)
-    draw.line((0, nav_y, W, nav_y), fill=COLOR_BAR_BORDER, width=2)
+    draw.line((0, nav_y, W, nav_y), fill=COLOR_BAR_BORDER, width=1)
     
-    # 4 Items: CREATE, FRAME, MY EDIT, MY SAVE
-    items = [
-        ("btn_create.png", "CREATE"),
-        (None, "FRAME"),
-        ("btn_my_edit.png", "MY EDIT"),
-        ("btn_my_save.png", "MY SAVE")
-    ]
+    # 4 Authentic Items matching main_activity.xml boMenu: CREATE, FRAME, MY EDIT, MY SAVE
+    items = ["CREATE", "FRAME", "MY EDIT", "MY SAVE"]
     tab_w = W // len(items)
-    for i, (icon_name, label) in enumerate(items):
+    
+    for i, label in enumerate(items):
         cx = i * tab_w + tab_w // 2
         is_active = (i == active_idx)
-        text_color = COLOR_ACCENT if is_active else COLOR_TEXT_MUTED
+        item_color = COLOR_ACCENT if is_active else COLOR_TEXT
         
-        # Load icon
-        icon = load_app_drawable(icon_name, (40, 40)) if icon_name else None
-        if icon:
-            img.paste(icon, (cx - 20, nav_y + 14), icon)
-        else:
-            # FRAME 4-pane grid vector icon
-            if label == "FRAME":
-                draw.rounded_rectangle((cx - 18, nav_y + 14, cx + 18, nav_y + 50), radius=4, outline=text_color, width=2)
-                draw.line((cx, nav_y + 14, cx, nav_y + 50), fill=text_color, width=2)
-                draw.line((cx - 18, nav_y + 30, cx + 18, nav_y + 30), fill=text_color, width=2)
-            else:
-                draw.rectangle((cx - 16, nav_y + 14, cx + 16, nav_y + 46), fill=text_color)
+        # Draw exact clean vector line-art icon matching app
+        draw_real_app_menu_icon(draw, label, cx, nav_y + 30, item_color, size=28)
         
-        draw.text((cx - len(label)*4 - 6, nav_y + 62), label, fill=text_color, font=FONT_SMB)
+        # Label in Nunito Bold matching app
+        text_color = COLOR_ACCENT if is_active else COLOR_TEXT
+        draw.text((cx - len(label)*4 - 6, nav_y + 60), label, fill=text_color, font=FONT_SMB)
+        
         if is_active:
-            draw.rounded_rectangle((cx - 22, nav_y + 88, cx + 22, nav_y + 92), radius=2, fill=COLOR_ACCENT)
+            # Subtle cyan active indicator underline
+            draw.rounded_rectangle((cx - 24, nav_y + 88, cx + 24, nav_y + 92), radius=2, fill=COLOR_ACCENT)
             
-    # System bar pill
+    # System bar pill (Samsung Galaxy S24 slim gesture bar)
     draw.rectangle((0, H - 25, W, H), fill=(20, 19, 25))
-    draw.rounded_rectangle((W//2 - 60, H - 15, W//2 + 60, H - 9), radius=3, fill=(100, 100, 110))
+    draw.rounded_rectangle((W//2 - 55, H - 15, W//2 + 55, H - 10), radius=3, fill=(140, 140, 150))
 
 
 # =============================================================
-# 1. SCREEN: Hero App Feed (Home Screen - 100% Real Templates, NO ADS)
+# 1. SCREEN: Hero App Feed (Home Screen - 100% Real Templates, Real Menu)
 # =============================================================
 def make_hero_feed():
     img = Image.new("RGBA", (W, H), COLOR_BG)
@@ -140,7 +155,7 @@ def make_hero_feed():
     
     # Top Bar: Background #2F2D3A (height 125px)
     draw.rectangle((0, 0, W, 125), fill=COLOR_BAR)
-    draw.line((0, 125, W, 125), fill=COLOR_BAR_BORDER, width=2)
+    draw.line((0, 125, W, 125), fill=COLOR_BAR_BORDER, width=1)
     draw_status_bar(draw, dark=False)
     
     # Left: info icon
@@ -214,18 +229,18 @@ def make_hero_feed():
             
         real_img = load_real_thumb(tfilename, cw, ch)
         
-        # Subtle CardView shadow/border
+        # Clean CardView border outline matching app
         draw.rounded_rectangle((gx - 1, gy - 1, gx + cw + 1, gy + ch + 1), radius=13, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
-        # Paste real thumbnail image
+        # Paste real thumbnail image full-bleed inside card
         img.paste(real_img, (gx, gy), mask)
 
-    # Bottom Navigation Dock
+    # Bottom Navigation Dock (CREATE active)
     draw_bottom_dock(img, draw, active_idx=0)
     return img
 
 
 # =============================================================
-# 2. SCREEN: Templates Category Screen (Youtube Cover Browser)
+# 2. SCREEN: Templates Category Screen (Youtube Cover Browser - Real Templates)
 # =============================================================
 def make_templates_screen():
     img = Image.new("RGBA", (W, H), COLOR_BG)
@@ -233,7 +248,7 @@ def make_templates_screen():
     
     # Top Bar: Background #2F2D3A (height 125px)
     draw.rectangle((0, 0, W, 125), fill=COLOR_BAR)
-    draw.line((0, 125, W, 125), fill=COLOR_BAR_BORDER, width=2)
+    draw.line((0, 125, W, 125), fill=COLOR_BAR_BORDER, width=1)
     draw_status_bar(draw, dark=False)
     
     # Left: Back arrow
@@ -289,7 +304,7 @@ def make_templates_screen():
         draw.rounded_rectangle((gx - 1, gy - 1, gx + cw + 1, gy + ch + 1), radius=13, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
         img.paste(real_img, (gx, gy), mask)
 
-    # Bottom Navigation Dock
+    # Bottom Navigation Dock (FRAME active)
     draw_bottom_dock(img, draw, active_idx=1)
     return img
 
@@ -303,7 +318,7 @@ def make_editor_screen():
     
     # Top Bar: Background #2F2D3A (height 125px)
     draw.rectangle((0, 0, W, 125), fill=COLOR_BAR)
-    draw.line((0, 125, W, 125), fill=COLOR_BAR_BORDER, width=2)
+    draw.line((0, 125, W, 125), fill=COLOR_BAR_BORDER, width=1)
     draw_status_bar(draw, dark=False)
     
     # Left: Back arrow and "Editor"
@@ -374,7 +389,6 @@ def make_editor_screen():
     # Active selected bounding box around headline element
     box_x1, box_y1 = 28, 35
     box_x2, box_y2 = 360, 115
-    # Dashed cyan line
     for dx in range(box_x1, box_x2, 12):
         cd.line((dx, box_y1, min(dx + 6, box_x2), box_y1), fill=COLOR_ACCENT, width=3)
         cd.line((dx, box_y2, min(dx + 6, box_x2), box_y2), fill=COLOR_ACCENT, width=3)
@@ -394,9 +408,7 @@ def make_editor_screen():
     mdraw_c.rounded_rectangle((0, 0, canv_w, canv_h), radius=14, fill=255)
     img.paste(real_canvas_source, (canv_x, canv_y), mask_c)
     
-    # ---------------------------------------------------------
     # Floating Layer Inspector Card (below canvas)
-    # ---------------------------------------------------------
     insp_y = canv_y + canv_h + 25
     draw.rounded_rectangle((canv_x, insp_y, canv_x + canv_w, insp_y + 110), radius=16, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
     draw.text((canv_x + 20, insp_y + 18), "Selected Layer: Headline Text", fill=COLOR_TEXT, font=FONT_SMB)
@@ -415,13 +427,11 @@ def make_editor_screen():
     draw.ellipse((canv_x + 535, insp_y + 73, canv_x + 549, insp_y + 91), fill=(255, 255, 255))
     draw.text((canv_x + 595, insp_y + 72), "+8", fill=COLOR_TEXT, font=FONT_SM)
 
-    # ---------------------------------------------------------
     # Bottom Editing Toolbar (5 Tools: Text, Sticker, Image, Effect, Background)
-    # ---------------------------------------------------------
     nav_h = 115
     nav_y = H - nav_h - 25
     draw.rectangle((0, nav_y, W, nav_y + nav_h), fill=COLOR_BAR)
-    draw.line((0, nav_y, W, nav_y), fill=COLOR_BAR_BORDER, width=2)
+    draw.line((0, nav_y, W, nav_y), fill=COLOR_BAR_BORDER, width=1)
     
     tools = [
         ("btn_text.png", "Text"),
@@ -446,7 +456,7 @@ def make_editor_screen():
             
     # System bar pill
     draw.rectangle((0, H - 25, W, H), fill=(20, 19, 25))
-    draw.rounded_rectangle((W//2 - 60, H - 15, W//2 + 60, H - 9), radius=3, fill=(100, 100, 110))
+    draw.rounded_rectangle((W//2 - 55, H - 15, W//2 + 55, H - 10), radius=3, fill=(140, 140, 150))
     return img
 
 
@@ -459,7 +469,7 @@ def make_cutout_screen():
     
     # Top Bar: Background #2F2D3A (height 125px)
     draw.rectangle((0, 0, W, 125), fill=COLOR_BAR)
-    draw.line((0, 125, W, 125), fill=COLOR_BAR_BORDER, width=2)
+    draw.line((0, 125, W, 125), fill=COLOR_BAR_BORDER, width=1)
     draw_status_bar(draw, dark=False)
     
     # Left: Back arrow
@@ -474,13 +484,9 @@ def make_cutout_screen():
     draw.line((W - 58, 74, W - 58, 90), fill=(255, 255, 255), width=3)
     draw.polygon([(W - 65, 86), (W - 58, 94), (W - 51, 86)], fill=(255, 255, 255))
     
-    # ---------------------------------------------------------
-    # MAIN WORKSPACE CANVAS (Checkerboard Transparency)
-    # ---------------------------------------------------------
+    # Main Canvas: Checkerboard Transparency
     canv_y = 135
     canv_h = 880
-    
-    # Draw Checkerboard Pattern
     sq_size = 24
     for cy in range(canv_y, canv_y + canv_h, sq_size):
         for cx in range(0, W, sq_size):
@@ -500,20 +506,16 @@ def make_cutout_screen():
     draw.ellipse((finger_x - 6, finger_y - 6, finger_x + 6, finger_y + 6), fill=(239, 68, 68))
     draw.text((finger_x + 38, finger_y - 10), "Touch Point", fill=(255, 255, 255), font=FONT_SMB)
     
-    # Offset dashed line going up 150px
     brush_x, brush_y = finger_x, finger_y - 150
     for dy in range(brush_y + 15, finger_y - 15, 10):
         draw.line((finger_x, dy, finger_x, dy + 5), fill=COLOR_ACCENT, width=2)
         
-    # Eraser Brush Circle + Crosshair (Offset position)
     draw.ellipse((brush_x - 35, brush_y - 35, brush_x + 35, brush_y + 35), outline=COLOR_ACCENT, width=3)
     draw.line((brush_x - 45, brush_y, brush_x + 45, brush_y), fill=COLOR_ACCENT, width=2)
     draw.line((brush_x, brush_y - 45, brush_x, brush_y + 45), fill=COLOR_ACCENT, width=2)
     draw.text((brush_x + 42, brush_y - 10), "Offset Eraser (150px)", fill=COLOR_ACCENT, font=FONT_SMB)
 
-    # ---------------------------------------------------------
     # Adjustment Sliders Panel (Offset & Threshold Seekbars)
-    # ---------------------------------------------------------
     panel_y = canv_y + canv_h + 15
     draw.rounded_rectangle((20, panel_y, W - 20, panel_y + 160), radius=16, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
     
@@ -533,13 +535,11 @@ def make_cutout_screen():
     draw.ellipse((thumb_x2 - 12, panel_y + 92, thumb_x2 + 12, panel_y + 116), fill=(255, 255, 255), outline=COLOR_ACCENT, width=3)
     draw.text((W - 90, panel_y + 92), "52", fill=COLOR_ACCENT, font=FONT_SMB)
 
-    # ---------------------------------------------------------
     # Bottom Cutout Toolbar (5 Modes: Auto, Lasso, Erase, Restore, Zoom)
-    # ---------------------------------------------------------
     nav_h = 115
     nav_y = H - nav_h - 25
     draw.rectangle((0, nav_y, W, nav_y + nav_h), fill=COLOR_BAR)
-    draw.line((0, nav_y, W, nav_y), fill=COLOR_BAR_BORDER, width=2)
+    draw.line((0, nav_y, W, nav_y), fill=COLOR_BAR_BORDER, width=1)
     
     tools = [
         ("ic_slated_auto.png", "Auto"),
@@ -564,7 +564,7 @@ def make_cutout_screen():
             
     # System bar pill
     draw.rectangle((0, H - 25, W, H), fill=(20, 19, 25))
-    draw.rounded_rectangle((W//2 - 60, H - 15, W//2 + 60, H - 9), radius=3, fill=(100, 100, 110))
+    draw.rounded_rectangle((W//2 - 55, H - 15, W//2 + 55, H - 10), radius=3, fill=(140, 140, 150))
     return img
 
 
@@ -577,7 +577,7 @@ def make_export_screen():
     
     # Top Bar: Background #2F2D3A (height 125px)
     draw.rectangle((0, 0, W, 125), fill=COLOR_BAR)
-    draw.line((0, 125, W, 125), fill=COLOR_BAR_BORDER, width=2)
+    draw.line((0, 125, W, 125), fill=COLOR_BAR_BORDER, width=1)
     draw_status_bar(draw, dark=False)
     
     # Left: Back arrow
@@ -619,7 +619,6 @@ def make_export_screen():
     btn_y = specs_y + 135
     # Primary YouTube Studio button (Red)
     draw.rounded_rectangle((40, btn_y, W - 40, btn_y + 65), radius=16, fill=(239, 68, 68))
-    # Play icon
     draw.polygon([(75, btn_y + 20), (75, btn_y + 44), (95, btn_y + 32)], fill=(255, 255, 255))
     draw.text((115, btn_y + 18), "Open in YouTube Studio", fill=(255, 255, 255), font=FONT_HEADING)
     
@@ -631,14 +630,14 @@ def make_export_screen():
     draw.rounded_rectangle((40, btn_y + 170, W - 40, btn_y + 235), radius=16, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=2)
     draw.text((W//2 - 95, btn_y + 188), "Save to Device Photos", fill=COLOR_TEXT, font=FONT_HEADING)
     
-    # Bottom Navigation Dock
+    # Bottom Navigation Dock (MY SAVE active)
     draw_bottom_dock(img, draw, active_idx=3)
     return img
 
 
 if __name__ == "__main__":
     os.makedirs("assets/images", exist_ok=True)
-    print("Generating authentic ad-free screens with REAL APP THUMBNAILS...")
+    print("Generating authentic ad-free screens with REAL APP THUMBNAILS & EXACT APP MENU...")
     
     feed = make_hero_feed()
     feed.save("assets/images/app-screen-feed.webp", "WEBP", quality=95)
@@ -660,4 +659,4 @@ if __name__ == "__main__":
     export_screen.save("assets/images/app-screen-export.webp", "WEBP", quality=95)
     print("[OK] Saved assets/images/app-screen-export.webp (720x1520)")
     
-    print("\nAll 5 mobile app screens generated successfully with REAL APP THUMBNAILS and zero ads!")
+    print("\nAll 5 mobile app screens generated successfully with exact app menu and real thumbnails!")

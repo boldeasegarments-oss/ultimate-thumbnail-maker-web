@@ -525,14 +525,17 @@ body:not(:has(.ark-hero)) .mobile-toggle,
   min-height: 720px;
 }
 
-/* Minimalist Clean White Phone Chassis (Locked 9:19 Smartphone Ratio) */
+/* Samsung Galaxy S24 Ultra-Slim Bezel Chassis (Locked 9:19 Smartphone Ratio) */
 .ark-phone {
-  background: #FFFFFF;
-  border-radius: 44px;
-  padding: 12px;
-  box-shadow: var(--shadow-phone);
-  border: 3px solid #FFFFFF;
-  outline: 1px solid rgba(0, 0, 0, 0.08);
+  background: #18171E;
+  border-radius: 36px;
+  padding: 4px;
+  box-shadow: 
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    0 35px 85px -15px rgba(0, 0, 0, 0.6),
+    0 15px 35px -5px rgba(0, 0, 0, 0.35);
+  border: 2px solid #2B2A34;
   position: relative;
   transition: transform var(--transition-smooth);
   display: flex;
@@ -541,8 +544,8 @@ body:not(:has(.ark-hero)) .mobile-toggle,
 }
 
 .ark-phone-screen {
-  background: #F8FAFC;
-  border-radius: 34px;
+  background: #212029;
+  border-radius: 30px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -568,8 +571,8 @@ body:not(:has(.ark-hero)) .mobile-toggle,
   height: 612px; /* Exact 9:19 aspect ratio */
   transform: rotate(-7deg) scale(0.92);
   z-index: 1;
-  opacity: 0.94;
-  filter: drop-shadow(0 25px 45px rgba(0, 35, 15, 0.28));
+  opacity: 0.96;
+  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.5));
 }
 
 /* Front Phone: Elevated forward with rich UI */
@@ -579,7 +582,10 @@ body:not(:has(.ark-hero)) .mobile-toggle,
   width: 320px;
   height: 676px; /* Exact 9:19 aspect ratio */
   z-index: 2;
-  box-shadow: 0 40px 90px -15px rgba(0, 35, 15, 0.38), 0 15px 35px rgba(15, 23, 42, 0.14);
+  box-shadow: 
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+    0 40px 90px -15px rgba(0, 0, 0, 0.7),
+    0 15px 35px rgba(0, 0, 0, 0.4);
 }
 
 /* Wave Divider (Seamless Transition) */
@@ -652,13 +658,16 @@ body:not(:has(.ark-hero)) .mobile-toggle,
   100% { transform: scale(1.04); }
 }
 
-/* Single Showcase Phone (Exact 9:19 Ratio) */
+/* Single Showcase Phone (Exact 9:19 Ratio - Samsung Galaxy S24) */
 .ark-showcase-phone {
   position: relative;
   z-index: 2;
   width: 310px;
   height: 654px; /* Exact 9:19 aspect ratio (310 * 19 / 9) */
-  box-shadow: 0 35px 80px -10px rgba(0, 40, 15, 0.25), 0 15px 30px rgba(15, 23, 42, 0.1);
+  box-shadow: 
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+    0 40px 90px -15px rgba(0, 0, 0, 0.65), 
+    0 15px 35px rgba(0, 0, 0, 0.35);
 }
 
 /* Floating Pins Around Phone */
