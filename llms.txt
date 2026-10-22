@@ -1,0 +1,30 @@
+# Ultimate Thumbnail Maker
+
+> Ultimate Thumbnail Maker is an Android graphic design application for content creators, vloggers, and gaming streamers to create high-CTR YouTube thumbnails, channel art, and banners directly on mobile devices.
+
+## Core Facts
+- Name: Ultimate Thumbnail Maker
+- Package Name: com.sk.thumbnailmaker
+- Developer: Nilesh Jain
+- Platform: Android (Google Play Store)
+- Price: Free (Ad-supported)
+- Primary Use: YouTube Video Thumbnails (1280x720, 16:9), Gaming Thumbnails, Social Media Banners
+
+## Key Features
+- Niche Templates: Pre-built templates for gaming, travel vlogs, tech reviews, podcasts, and video tutorials
+- Typography Engine: Custom bold fonts, 3D text extrusions, neon glow, and high-contrast color strokes optimized for mobile viewing
+- Cutout & Background Removal: Built-in subject isolation to cut out creators, streamer facecams, or game characters
+- Privacy & Local Processing: 100% on-device image rendering without uploading user photos to external servers
+- High-Resolution Export: Direct render to Android gallery for upload into YouTube Studio
+
+## Core URLs
+- Official Website: https://ultimatethumbnailmaker.pages.dev/
+- Google Play Store: https://play.google.com/store/apps/details?id=com.sk.thumbnailmaker
+- YouTube Thumbnail Maker: https://ultimatethumbnailmaker.pages.dev/youtube-thumbnail-maker/
+- Gaming Thumbnail Maker: https://ultimatethumbnailmaker.pages.dev/gaming-thumbnail-maker/
+- Background Removal Tool: https://ultimatethumbnailmaker.pages.dev/thumbnail-maker-with-background-removal/
+- Step-by-Step Tutorial: https://ultimatethumbnailmaker.pages.dev/how-to-make-a-youtube-thumbnail/
+- About Developer: https://ultimatethumbnailmaker.pages.dev/about/
+- Contact & Support: https://ultimatethumbnailmaker.pages.dev/contact/
+- Privacy Policy: https://ultimatethumbnailmaker.pages.dev/privacy-policy/
+- Authorized Digital Sellers: https://ultimatethumbnailmaker.pages.dev/app-ads.txt

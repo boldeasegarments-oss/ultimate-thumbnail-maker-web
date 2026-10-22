@@ -5,9 +5,21 @@
 User-agent: OAI-SearchBot
 Allow: /
 
-# Disallow GPTBot from automated model scraping (optional crawler policy)
+# Allow GPTBot for OpenAI knowledge base & indexing
 User-agent: GPTBot
-Disallow: /
+Allow: /
+
+# Allow Google-Extended for Gemini model grounding
+User-agent: Google-Extended
+Allow: /
+
+# Allow PerplexityBot for Perplexity AI search
+User-agent: PerplexityBot
+Allow: /
+
+# Allow ClaudeBot for Anthropic indexing
+User-agent: ClaudeBot
+Allow: /
 
 # Allow all other standard search crawlers (Googlebot, Bingbot, Applebot, etc.)
 User-agent: *
