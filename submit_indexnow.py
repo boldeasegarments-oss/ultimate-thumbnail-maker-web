@@ -1,7 +1,7 @@
 import urllib.request
 import json
 
-KEY = "e8b1d9c4f72a4e5bb09c614d3f1a8e2b"
+KEY = "bc53cb9aaecb4d8b8c65c977578571cb"
 HOST = "ultimatethumbnailmaker.pages.dev"
 KEY_LOCATION = f"https://{HOST}/{KEY}.txt"
 
