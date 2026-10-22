@@ -12,3 +12,7 @@ __pycache__/
 
 # Local scratch and working files
 scratch/
+
+# Local AI agent skills and design tokens (local only)
+.agents/
+design-system/
