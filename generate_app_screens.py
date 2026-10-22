@@ -516,9 +516,69 @@ def make_cutout_screen():
     draw.line((tray_x - 6, tray_y - 1, tray_x, tray_y + 6), fill=COLOR_TEXT, width=3)
     draw.line((tray_x + 6, tray_y - 1, tray_x, tray_y + 6), fill=COLOR_TEXT, width=3)
     
-    # Main Canvas: Checkerboard Transparency (Sub-pixel grid)
-    canv_y = 135
-    canv_h = 880
+    # 2. Bottom Cutout Toolbar (5 Modes: Auto, Lasso, Erase, Restore, Zoom)
+    nav_h = 120
+    nav_y = H - nav_h - 25  # 1375
+    draw.rectangle((0, nav_y, W, nav_y + nav_h), fill=COLOR_BAR)
+    draw.line((0, nav_y, W, nav_y), fill=COLOR_BAR_BORDER, width=1)
+    
+    # Collapse chevron handle (rel_down in activity_eraser.xml)
+    down_icon = load_app_drawable("ic_down.png", (22, 12))
+    if down_icon:
+        img.paste(down_icon, (W // 2 - 11, nav_y + 6), down_icon)
+    else:
+        draw.line((W // 2 - 12, nav_y + 8, W // 2, nav_y + 14), fill=(160, 160, 170), width=2)
+        draw.line((W // 2, nav_y + 14, W // 2 + 12, nav_y + 8), fill=(160, 160, 170), width=2)
+        
+    tools = [
+        ("ic_slated_auto.png", "Auto"),
+        ("ic_slated_extract.png", "Lasso"),
+        ("ic_slated_manual.png", "Erase"),
+        ("ic_slated_restore.png", "Restore"),
+        ("ic_slated_zoom.png", "Zoom")
+    ]
+    tool_w = W // len(tools)
+    for idx, (tfile, tlabel) in enumerate(tools):
+        cx = idx * tool_w + tool_w // 2
+        is_active = (idx == 0) # Auto active
+        timg = load_app_drawable(tfile, (42, 42))
+        if timg:
+            img.paste(timg, (cx - 21, nav_y + 24), timg)
+        else:
+            draw.rectangle((cx - 18, nav_y + 24, cx + 18, nav_y + 60), fill=COLOR_ACCENT if is_active else COLOR_TEXT_MUTED)
+        t_color = COLOR_ACCENT if is_active else COLOR_TEXT_MUTED
+        draw.text((cx - len(tlabel)*4 - 4, nav_y + 74), tlabel, fill=t_color, font=FONT_SMB)
+        if is_active:
+            draw.rounded_rectangle((cx - 20, nav_y + 104, cx + 20, nav_y + 108), radius=2, fill=COLOR_ACCENT)
+
+    # 3. Adjustment Sliders Panel (Docked DIRECTLY ON TOP of Bottom Menu, ZERO VOID!)
+    # Matching activity_eraser.xml rel_seek_container layout_above="@id/footer"
+    panel_h = 150
+    panel_gap = 10
+    panel_y = nav_y - panel_h - panel_gap   # 1375 - 150 - 10 = 1215
+    panel_bottom = nav_y - panel_gap        # 1365
+    
+    draw.rounded_rectangle((18, panel_y, W - 18, panel_bottom), radius=16, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
+    
+    # Offset Seekbar
+    draw.text((45, panel_y + 22), "OFFSET", fill=COLOR_TEXT, font=FONT_SMB)
+    draw.rounded_rectangle((155, panel_y + 30, W - 120, panel_y + 38), radius=4, fill=(60, 58, 75))
+    draw.rounded_rectangle((155, panel_y + 30, 155 + int((W - 275) * 0.5), panel_y + 38), radius=4, fill=COLOR_ACCENT)
+    thumb_x = 155 + int((W - 275) * 0.5)
+    draw.ellipse((thumb_x - 12, panel_y + 22, thumb_x + 12, panel_y + 46), fill=(255, 255, 255), outline=COLOR_ACCENT, width=3)
+    draw.text((W - 90, panel_y + 22), "150", fill=COLOR_ACCENT, font=FONT_SMB)
+    
+    # Threshold Seekbar
+    draw.text((45, panel_y + 90), "THRESHOLD", fill=COLOR_TEXT, font=FONT_SMB)
+    draw.rounded_rectangle((155, panel_y + 98, W - 120, panel_y + 106), radius=4, fill=(60, 58, 75))
+    draw.rounded_rectangle((155, panel_y + 98, 155 + int((W - 275) * 0.65), panel_y + 106), radius=4, fill=COLOR_ACCENT)
+    thumb_x2 = 155 + int((W - 275) * 0.65)
+    draw.ellipse((thumb_x2 - 12, panel_y + 90, thumb_x2 + 12, panel_y + 114), fill=(255, 255, 255), outline=COLOR_ACCENT, width=3)
+    draw.text((W - 90, panel_y + 90), "52", fill=COLOR_ACCENT, font=FONT_SMB)
+
+    # 4. Main Canvas: Checkerboard Transparency (Extending all the way down to sliders panel!)
+    canv_y = 125
+    canv_h = panel_y - 12 - canv_y          # 1215 - 12 - 125 = 1078px
     sq_size = 24
     for cy in range(canv_y, canv_y + canv_h, sq_size):
         for cx in range(0, W, sq_size):
@@ -533,7 +593,7 @@ def make_cutout_screen():
         
     if os.path.exists(cutout_path):
         c_cutout = Image.open(cutout_path).convert("RGBA")
-        cw, ch = 450, 704
+        cw, ch = 480, 750
         c_cutout = c_cutout.resize((cw, ch), Image.Resampling.LANCZOS)
         
         # Draw dynamic neon cyan boundary glow around creator
@@ -541,11 +601,11 @@ def make_cutout_screen():
         alpha_mask = c_cutout.split()[-1]
         for ox, oy in [(-3,0),(3,0),(0,-3),(0,3),(-2,-2),(2,2),(-2,2),(2,-2)]:
             glow_mask.paste(Image.new("RGBA", (cw, ch), (14, 172, 255, 75)), (ox + 8, oy + 8), alpha_mask)
-        img.paste(glow_mask, (W//2 - cw//2 - 8, canv_y + 112), glow_mask)
-        img.paste(c_cutout, (W//2 - cw//2, canv_y + 120), c_cutout)
+        img.paste(glow_mask, (W//2 - cw//2 - 8, canv_y + 132), glow_mask)
+        img.paste(c_cutout, (W//2 - cw//2, canv_y + 140), c_cutout)
         
     # Offset Cursor Brush Mechanism (Exact App Offset Feature)
-    finger_x, finger_y = 440, canv_y + 580
+    finger_x, finger_y = 440, canv_y + 680
     draw.ellipse((finger_x - 30, finger_y - 30, finger_x + 30, finger_y + 30), outline=(239, 68, 68), width=3)
     draw.ellipse((finger_x - 6, finger_y - 6, finger_x + 6, finger_y + 6), fill=(239, 68, 68))
     draw.text((finger_x + 38, finger_y - 10), "Touch Point", fill=(255, 255, 255), font=FONT_SMB)
@@ -559,54 +619,7 @@ def make_cutout_screen():
     draw.line((brush_x, brush_y - 45, brush_x, brush_y + 45), fill=COLOR_ACCENT, width=2)
     draw.text((brush_x + 42, brush_y - 10), "Offset Eraser (150px)", fill=COLOR_ACCENT, font=FONT_SMB)
 
-    # Adjustment Sliders Panel (Offset & Threshold Seekbars matching activity_eraser.xml)
-    panel_y = canv_y + canv_h + 15
-    draw.rounded_rectangle((20, panel_y, W - 20, panel_y + 160), radius=16, fill=COLOR_CARD_BG, outline=COLOR_BAR_BORDER, width=1)
-    
-    # Offset seekbar
-    draw.text((45, panel_y + 22), "OFFSET", fill=COLOR_TEXT, font=FONT_SMB)
-    draw.rounded_rectangle((150, panel_y + 30, W - 120, panel_y + 38), radius=4, fill=(60, 58, 75))
-    draw.rounded_rectangle((150, panel_y + 30, 150 + int((W - 270) * 0.5), panel_y + 38), radius=4, fill=COLOR_ACCENT)
-    thumb_x = 150 + int((W - 270) * 0.5)
-    draw.ellipse((thumb_x - 12, panel_y + 22, thumb_x + 12, panel_y + 46), fill=(255, 255, 255), outline=COLOR_ACCENT, width=3)
-    draw.text((W - 90, panel_y + 22), "150", fill=COLOR_ACCENT, font=FONT_SMB)
-    
-    # Threshold seekbar
-    draw.text((45, panel_y + 92), "THRESHOLD", fill=COLOR_TEXT, font=FONT_SMB)
-    draw.rounded_rectangle((150, panel_y + 100, W - 120, panel_y + 108), radius=4, fill=(60, 58, 75))
-    draw.rounded_rectangle((150, panel_y + 100, 150 + int((W - 270) * 0.65), panel_y + 108), radius=4, fill=COLOR_ACCENT)
-    thumb_x2 = 150 + int((W - 270) * 0.65)
-    draw.ellipse((thumb_x2 - 12, panel_y + 92, thumb_x2 + 12, panel_y + 116), fill=(255, 255, 255), outline=COLOR_ACCENT, width=3)
-    draw.text((W - 90, panel_y + 92), "52", fill=COLOR_ACCENT, font=FONT_SMB)
-
-    # Bottom Cutout Toolbar (5 Modes: Auto, Lasso, Erase, Restore, Zoom)
-    nav_h = 115
-    nav_y = H - nav_h - 25
-    draw.rectangle((0, nav_y, W, nav_y + nav_h), fill=COLOR_BAR)
-    draw.line((0, nav_y, W, nav_y), fill=COLOR_BAR_BORDER, width=1)
-    
-    tools = [
-        ("ic_slated_auto.png", "Auto"),
-        ("ic_slated_extract.png", "Lasso"),
-        ("ic_slated_manual.png", "Erase"),
-        ("ic_slated_restore.png", "Restore"),
-        ("ic_slated_zoom.png", "Zoom")
-    ]
-    tool_w = W // len(tools)
-    for idx, (tfile, tlabel) in enumerate(tools):
-        cx = idx * tool_w + tool_w // 2
-        is_active = (idx == 0) # Auto active
-        timg = load_app_drawable(tfile, (42, 42))
-        if timg:
-            img.paste(timg, (cx - 21, nav_y + 16), timg)
-        else:
-            draw.rectangle((cx - 18, nav_y + 16, cx + 18, nav_y + 52), fill=COLOR_ACCENT if is_active else COLOR_TEXT_MUTED)
-        t_color = COLOR_ACCENT if is_active else COLOR_TEXT_MUTED
-        draw.text((cx - len(tlabel)*4 - 4, nav_y + 68), tlabel, fill=t_color, font=FONT_SMB)
-        if is_active:
-            draw.rounded_rectangle((cx - 20, nav_y + 96, cx + 20, nav_y + 100), radius=2, fill=COLOR_ACCENT)
-            
-    # System bar pill (Samsung Galaxy S24 slim gesture bar)
+    # 5. System bar pill (Samsung Galaxy S24 slim gesture bar)
     draw.rectangle((0, H - 25, W, H), fill=(20, 19, 25))
     draw.rounded_rectangle((W//2 - 55, H - 15, W//2 + 55, H - 10), radius=3, fill=(140, 140, 150))
     return img
