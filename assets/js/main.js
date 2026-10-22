@@ -173,7 +173,214 @@ function initHeaderScroll() {
 /**
  * Global App Initialization.
  */
+
+/**
+ * HD Thumbnail Showcase Gallery (Interactive Category & Thumbnail Selector).
+ */
+function initHDGallery() {
+  const card = document.getElementById('hd-gallery-card');
+  if (!card) return;
+
+  const tabBtns = card.querySelectorAll('.ark-tab-btn');
+  const stripItems = card.querySelectorAll('.ark-strip-item');
+  const activeImg = card.querySelector('#gallery-active-img');
+  const stageBadge = card.querySelector('.ark-stage-badge');
+
+  if (!tabBtns.length || !stripItems.length || !activeImg) return;
+
+  function selectByIndex(targetIndex) {
+    const idx = parseInt(targetIndex, 10);
+    if (isNaN(idx)) return;
+
+    // 1. Update Category Filter Pills
+    tabBtns.forEach((btn) => {
+      const bIdx = parseInt(btn.getAttribute('data-index'), 10);
+      const isMatch = bIdx === idx;
+      btn.classList.toggle('is-active', isMatch);
+      btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+      if (isMatch) {
+        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    });
+
+    // 2. Update Thumbnail Strip Previews
+    stripItems.forEach((item) => {
+      const sIdx = parseInt(item.getAttribute('data-index'), 10);
+      const isMatch = sIdx === idx;
+      item.classList.toggle('is-active', isMatch);
+      item.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+    });
+
+    // 3. Update Featured 16:9 Display Stage
+    const activeTab = Array.from(tabBtns).find(b => parseInt(b.getAttribute('data-index'), 10) === idx) || tabBtns[0];
+    if (activeTab) {
+      const src = activeTab.getAttribute('data-src');
+      const title = activeTab.getAttribute('data-title') || activeTab.textContent.trim();
+      
+      activeImg.style.opacity = '0.35';
+      activeImg.style.transform = 'scale(0.985)';
+      
+      const newImg = new Image();
+      newImg.onload = () => {
+        activeImg.src = src;
+        activeImg.alt = title + ' - Full HD 1280x720 YouTube Thumbnail export preview ready for YouTube Studio';
+        activeImg.style.opacity = '1';
+        activeImg.style.transform = 'scale(1)';
+      };
+      newImg.src = src;
+
+      if (stageBadge) {
+        stageBadge.textContent = '1280 × 720 HD';
+      }
+    }
+  }
+
+  // Click on Tab Buttons
+  tabBtns.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const idx = btn.getAttribute('data-index');
+      selectByIndex(idx);
+    });
+  });
+
+  // Click on Strip Thumbnails
+  stripItems.forEach((item) => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const idx = item.getAttribute('data-index');
+      selectByIndex(idx);
+    });
+  });
+
+  // Click on the main stage image advances to next thumbnail
+  if (activeImg && activeImg.parentElement) {
+    activeImg.parentElement.style.cursor = 'pointer';
+    activeImg.parentElement.addEventListener('click', () => {
+      const currentActive = card.querySelector('.ark-tab-btn.is-active');
+      const currentIdx = currentActive ? parseInt(currentActive.getAttribute('data-index'), 10) : 0;
+      const nextIdx = (currentIdx + 1) % tabBtns.length;
+      selectByIndex(nextIdx);
+    });
+  }
+}
+
+/**
+ * Interactive 3D Thumbnail Studio Sandbox Controller.
+ */
+function initThumbnailStudio() {
+  const studio = document.getElementById('thumbnail-studio');
+  if (!studio) return;
+
+  const genreBtns = studio.querySelectorAll('.studio-tab-btn');
+  const headlineInput = studio.querySelector('#studio-headline-input');
+  const styleBtns = studio.querySelectorAll('.studio-pill-btn');
+  const toggle3dBtn = studio.querySelector('#btn-toggle-3d');
+  
+  const canvas = studio.querySelector('.studio-canvas');
+  const headline = studio.querySelector('.studio-headline');
+  const badgeTag = studio.querySelector('.studio-badge-tag');
+  const bgLayer = studio.querySelector('.studio-layer--bg');
+
+  const presets = {
+    gaming: {
+      headline: 'EPIC BOSS DEFEATED!',
+      tag: '100% UNLOCKED',
+      tagBg: '#E11D48',
+      textColor: '#FFEA00',
+      bgGrad: 'linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)'
+    },
+    youtube: {
+      headline: 'I SPENT 24 HOURS HERE',
+      tag: 'VIRAL VLOG',
+      tagBg: '#DC2626',
+      textColor: '#FFFFFF',
+      bgGrad: 'linear-gradient(135deg, #451a03 0%, #1e1b4b 100%)'
+    },
+    tech: {
+      headline: 'DO NOT BUY THIS YET',
+      tag: 'BRUTAL TRUTH',
+      tagBg: '#2563EB',
+      textColor: '#38BDF8',
+      bgGrad: 'linear-gradient(135deg, #09090b 0%, #172554 100%)'
+    },
+    tutorial: {
+      headline: 'EDIT LIKE A PRO IN 10M',
+      tag: 'MASTERCLASS',
+      tagBg: '#059669',
+      textColor: '#34D399',
+      bgGrad: 'linear-gradient(135deg, #064e3b 0%, #0f172a 100%)'
+    }
+  };
+
+  // 1. Genre Switching
+  genreBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      genreBtns.forEach((b) => {
+        b.classList.remove('is-active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('is-active');
+      btn.setAttribute('aria-selected', 'true');
+
+      const theme = btn.getAttribute('data-theme') || 'gaming';
+      const preset = presets[theme];
+      if (!preset) return;
+
+      if (headline) {
+        headline.textContent = preset.headline;
+        headline.style.color = preset.textColor;
+      }
+      if (headlineInput) {
+        headlineInput.value = preset.headline;
+      }
+      if (badgeTag) {
+        badgeTag.textContent = preset.tag;
+        badgeTag.style.background = preset.tagBg;
+      }
+      if (bgLayer) {
+        bgLayer.style.background = preset.bgGrad;
+      }
+    });
+  });
+
+  // 2. Real-time Headline Input
+  if (headlineInput && headline) {
+    headlineInput.addEventListener('input', (e) => {
+      headline.textContent = e.target.value.trim() || 'YOUR TITLE HERE';
+    });
+  }
+
+  // 3. Font / Letter Styling Pills
+  styleBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      styleBtns.forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+
+      const styleKey = btn.getAttribute('data-style') || 'impact';
+      if (headline) {
+        headline.classList.remove('style-impact', 'style-italic', 'style-cyber');
+        headline.classList.add('style-' + styleKey);
+      }
+    });
+  });
+
+  // 4. 3D Exploded View Toggle
+  if (toggle3dBtn && canvas) {
+    toggle3dBtn.addEventListener('click', () => {
+      const isExploded = canvas.classList.toggle('is-exploded');
+      const textSpan = toggle3dBtn.querySelector('span');
+      if (textSpan) {
+        textSpan.textContent = isExploded ? 'Reset Flat View' : 'Toggle 3D Exploded View';
+      }
+      toggle3dBtn.classList.toggle('is-active', isExploded);
+    });
+  }
+}
+
 function initApp() {
+  initHDGallery();
+  initThumbnailStudio();
   initCutoutInteractiveStudio();
   initMobileNav();
   initHeaderScroll();

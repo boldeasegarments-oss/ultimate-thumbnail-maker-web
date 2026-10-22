@@ -1310,6 +1310,8 @@ body:not(:has(.ark-hero)) .mobile-toggle:hover,
   padding-bottom: 0.35rem;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 .ark-gallery-tabs::-webkit-scrollbar {
   display: none;
@@ -1318,6 +1320,7 @@ body:not(:has(.ark-hero)) .mobile-toggle:hover,
 .ark-tab-btn {
   appearance: none;
   -webkit-appearance: none;
+  flex-shrink: 0;
   background: var(--bg-tertiary);
   border: 1px solid transparent;
   color: var(--text-dark);
@@ -1661,6 +1664,30 @@ body:not(:has(.ark-hero)) .mobile-toggle:hover,
   text-shadow: 3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 0 8px 25px rgba(0, 0, 0, 0.85);
   letter-spacing: 0.03em;
   line-height: 0.95;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.studio-headline.style-impact {
+  font-family: 'Bebas Neue', sans-serif;
+  font-style: normal;
+  letter-spacing: 0.03em;
+  transform: none;
+}
+
+.studio-headline.style-italic {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  transform: skewX(-8deg);
+}
+
+.studio-headline.style-cyber {
+  font-family: 'Courier New', Courier, monospace;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .studio-badge-tag {
@@ -3282,6 +3309,7 @@ h3.card-title {
 }
 
 @media (max-width: 991px) {
+  .ark-tool-badge,
   .ark-tool-badge--cutout-offset,
   .ark-tool-badge--cutout-thresh {
     display: none !important;
