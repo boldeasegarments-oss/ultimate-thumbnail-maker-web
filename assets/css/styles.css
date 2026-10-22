@@ -136,6 +136,53 @@ a:hover {
   border-radius: var(--radius-sm);
 }
 
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+  outline: 3px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* --- Interactive Elements & Pointer Cursor --- */
+button,
+summary,
+.btn,
+.nav-cta-btn,
+.mobile-toggle,
+.studio-tab-btn,
+.studio-pill-btn,
+.ark-mode-pill,
+.faq-question,
+.template-card,
+.ark-text-link,
+.bento-link {
+  cursor: pointer;
+}
+
+/* --- Accessibility: Reduced Motion (UI/UX Pro Max Guideline) --- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .card-3d,
+  .showcase-frame,
+  .ark-showcase-phone,
+  .card,
+  .ark-floating-pin,
+  .ark-tool-badge {
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
 .skip-to-content {
   position: absolute;
   top: -100px;
@@ -163,12 +210,17 @@ a:hover {
   padding-right: 1.5rem;
 }
 
-/* --- Typography --- */
-h1, h2, h3, h4, h5, h6 {
+/* --- Typography (UI/UX Pro Max Balanced Line Scale) --- */
+h1, h2, h3, h4, h5, h6,
+.section-title,
+.cta-banner-title,
+.ark-story-title,
+.bento-title {
   color: var(--text-dark);
   line-height: 1.2;
   font-weight: 800;
   letter-spacing: -0.025em;
+  text-wrap: balance;
 }
 
 h1 {
@@ -711,8 +763,8 @@ body:not(:has(.ark-hero)) .mobile-toggle,
 }
 
 .ark-pin-icon {
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background: var(--ark-green-subtle);
   color: var(--ark-green-dark);
@@ -720,6 +772,12 @@ body:not(:has(.ark-hero)) .mobile-toggle,
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.ark-pin-icon svg {
+  width: 14px;
+  height: 14px;
 }
 
 /* Story Content Text */
@@ -1022,16 +1080,23 @@ body:not(:has(.ark-hero)) .mobile-toggle,
 
 .ark-mode-pill {
   flex: 1;
-  text-align: center;
-  font-size: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  padding: 0.4rem 0.2rem;
+  padding: 0.45rem 0.25rem;
   border-radius: var(--radius-sm);
   background: var(--bg-secondary);
   color: var(--text-muted);
   border: 1px solid var(--border-light);
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.ark-mode-pill svg {
+  flex-shrink: 0;
 }
 
 .ark-mode-pill:hover {
@@ -1636,14 +1701,22 @@ body:not(:has(.ark-hero)) .mobile-toggle,
 
 .bento-badge {
   display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-size: 0.75rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  padding: 0.3rem 0.75rem;
+  padding: 0.35rem 0.8rem;
   border-radius: var(--radius-full);
   margin-bottom: 1rem;
   width: fit-content;
+}
+
+.bento-badge svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 
 .bento-badge--emerald { background: var(--ark-green-subtle); color: var(--ark-green-dark); }

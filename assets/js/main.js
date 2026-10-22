@@ -554,27 +554,27 @@ function initCutoutInteractiveStudio() {
   const modeData = {
     auto: {
       badge: '0.2s Auto Isolation',
-      desc: '⚡ <strong>Auto Mode:</strong> 1-tap instant color backdrop clearing with neural edge refine.',
+      desc: '<strong>Auto Mode:</strong> 1-tap instant color backdrop clearing with neural edge refine.',
       defaultVal: 70
     },
     lasso: {
       badge: 'Polygon Lasso Active',
-      desc: '✂ <strong>Lasso Mode:</strong> Trace freehand custom boundaries to cut inside or outside the polygon.',
+      desc: '<strong>Lasso Mode:</strong> Trace freehand custom boundaries to cut inside or outside the polygon.',
       defaultVal: 85
     },
     brush: {
       badge: 'Offset Brush (30px)',
-      desc: '🎯 <strong>Manual Brush:</strong> Fine-tune fine hair strands with fingertip offset cursor guidance.',
+      desc: '<strong>Manual Brush:</strong> Fine-tune fine hair strands with fingertip offset cursor guidance.',
       defaultVal: 45
     },
     restore: {
       badge: 'Smart Paint-Back',
-      desc: '↺ <strong>Restore Mode:</strong> Bring back accidentally erased subject details without restarting.',
+      desc: '<strong>Restore Mode:</strong> Bring back accidentally erased subject details without restarting.',
       defaultVal: 50
     },
     zoom: {
       badge: 'Pixel Precision 400%',
-      desc: '🔍 <strong>Zoom Mode:</strong> Pinch & pan to inspect sub-pixel boundaries in razor-sharp detail.',
+      desc: '<strong>Zoom Mode:</strong> Pinch & pan to inspect sub-pixel boundaries in razor-sharp detail.',
       defaultVal: 100
     }
   };
