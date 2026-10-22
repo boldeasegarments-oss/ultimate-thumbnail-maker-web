@@ -16,3 +16,9 @@ scratch/
 # Local AI agent skills and design tokens (local only)
 .agents/
 design-system/
+
+# Local Python tools, test scripts, and internal blueprints (local only)
+audit.py
+generate_app_screens.py
+serve.py
+ultimate_thumbnail_maker_ai_seo_geo_blueprint.md
