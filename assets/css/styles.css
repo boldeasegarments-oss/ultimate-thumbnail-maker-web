@@ -3375,7 +3375,7 @@ h3.card-title {
     left: 0;
     right: 0;
     width: 100%;
-    background: rgba(255, 255, 255, 0.98);
+    background: #FFFFFF;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     padding: 1.25rem 1.5rem;

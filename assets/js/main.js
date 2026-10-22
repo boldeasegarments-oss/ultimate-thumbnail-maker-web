@@ -124,29 +124,52 @@ function initCutoutInteractiveStudio() {
  */
 function initMobileNav() {
   const toggle = document.querySelector('.mobile-toggle');
-  const menu = document.getElementById('nav-menu');
+  const menu = document.querySelector('.nav-menu') || document.getElementById('nav-menu');
   if (!toggle || !menu) return;
+
+  const updateToggleIcon = (isOpen) => {
+    toggle.classList.toggle('is-open', isOpen);
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    toggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+    
+    const iconPath = toggle.querySelector('path');
+    if (iconPath) {
+      if (isOpen) {
+        iconPath.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+      } else {
+        iconPath.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+      }
+    }
+  };
 
   toggle.addEventListener('click', (e) => {
     e.stopPropagation();
     const isOpen = menu.classList.toggle('is-open');
-    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    toggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+    updateToggleIcon(isOpen);
   });
 
+  // Auto-close drawer when clicking any nav link
+  menu.querySelectorAll('.nav-link, .nav-cta-btn').forEach((link) => {
+    link.addEventListener('click', () => {
+      menu.classList.remove('is-open');
+      updateToggleIcon(false);
+    });
+  });
+
+  // Close when clicking outside header/menu
   document.addEventListener('click', (e) => {
     if (menu.classList.contains('is-open') && !menu.contains(e.target) && !toggle.contains(e.target)) {
       menu.classList.remove('is-open');
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.setAttribute('aria-label', 'Open navigation menu');
+      updateToggleIcon(false);
     }
   });
 
+  // Close on Escape key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && menu.classList.contains('is-open')) {
       menu.classList.remove('is-open');
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.setAttribute('aria-label', 'Open navigation menu');
+      updateToggleIcon(false);
+      toggle.focus();
     }
   });
 }
