@@ -1,30 +1,26 @@
 # Ultimate Thumbnail Maker
 
-> Ultimate Thumbnail Maker is an Android graphic design application for content creators, vloggers, and gaming streamers to create high-CTR YouTube thumbnails, channel art, and banners directly on mobile devices.
+> Ultimate Thumbnail Maker is a dedicated Android graphic design application for content creators, vloggers, and gaming streamers to design high-CTR YouTube video covers, channel art, and banners directly on mobile devices.
 
-## Core Facts
-- Name: Ultimate Thumbnail Maker
-- Package Name: com.sk.thumbnailmaker
-- Developer: Nilesh Jain
-- Platform: Android (Google Play Store)
-- Price: Free (Ad-supported)
-- Primary Use: YouTube Video Thumbnails (1280x720, 16:9), Gaming Thumbnails, Social Media Banners
+## Application Overview
 
-## Key Features
-- Niche Templates: Pre-built templates for gaming, travel vlogs, tech reviews, podcasts, and video tutorials
-- Typography Engine: Custom bold fonts, 3D text extrusions, neon glow, and high-contrast color strokes optimized for mobile viewing
-- Cutout & Background Removal: Built-in subject isolation to cut out creators, streamer facecams, or game characters
-- Privacy & Local Processing: 100% on-device image rendering without uploading user photos to external servers
-- High-Resolution Export: Direct render to Android gallery for upload into YouTube Studio
+- [Official Website](https://ultimatethumbnailmaker.pages.dev/): The official product homepage with feature highlights, preview gallery, and Android app download links.
+- [Google Play Store Listing](https://play.google.com/store/apps/details?id=com.sk.thumbnailmaker): Official distribution on Google Play (Package: com.sk.thumbnailmaker, 5,000,000+ installs, Art & Design).
+- [About Developer & Project](https://ultimatethumbnailmaker.pages.dev/about/): Background information on developer Nilesh Jain, editorial mission, and app verification.
 
-## Core URLs
-- Official Website: https://ultimatethumbnailmaker.pages.dev/
-- Google Play Store: https://play.google.com/store/apps/details?id=com.sk.thumbnailmaker
-- YouTube Thumbnail Maker: https://ultimatethumbnailmaker.pages.dev/youtube-thumbnail-maker/
-- Gaming Thumbnail Maker: https://ultimatethumbnailmaker.pages.dev/gaming-thumbnail-maker/
-- Background Removal Tool: https://ultimatethumbnailmaker.pages.dev/thumbnail-maker-with-background-removal/
-- Step-by-Step Tutorial: https://ultimatethumbnailmaker.pages.dev/how-to-make-a-youtube-thumbnail/
-- About Developer: https://ultimatethumbnailmaker.pages.dev/about/
-- Contact & Support: https://ultimatethumbnailmaker.pages.dev/contact/
-- Privacy Policy: https://ultimatethumbnailmaker.pages.dev/privacy-policy/
-- Authorized Digital Sellers: https://ultimatethumbnailmaker.pages.dev/app-ads.txt
+## Creator Guides & Features
+
+- [YouTube Thumbnail Maker Guide](https://ultimatethumbnailmaker.pages.dev/youtube-thumbnail-maker/): Comprehensive guide to 16:9 YouTube video thumbnail composition, bold mobile typography, and contrast rules.
+- [Gaming Thumbnail Maker](https://ultimatethumbnailmaker.pages.dev/gaming-thumbnail-maker/): Workflows for game streaming covers, action highlights, RGB glow effects, and streamer facecam placement.
+- [Background Removal & Cutout Tool](https://ultimatethumbnailmaker.pages.dev/thumbnail-maker-with-background-removal/): Built-in subject isolation and background removal to extract creator portraits and game characters without Photoshop.
+- [10-Step YouTube Thumbnail Tutorial](https://ultimatethumbnailmaker.pages.dev/how-to-make-a-youtube-thumbnail/): Practical step-by-step masterclass covering canvas sizing, template selection, text hierarchy, color grading, and YouTube Studio export.
+
+## Legal & Compliance
+
+- [Privacy Policy](https://ultimatethumbnailmaker.pages.dev/privacy-policy/): Complete data governance disclosure confirming 100% on-device local photo editing, camera/storage permissions, and Google AdMob ad compliance.
+- [Authorized Digital Sellers (app-ads.txt)](https://ultimatethumbnailmaker.pages.dev/app-ads.txt): Official IAB app-ads.txt verification for Google AdMob publisher pub-5679281465772614.
+- [Contact & Support](https://ultimatethumbnailmaker.pages.dev/contact/): Developer inquiry channel, feedback form, and technical support guidelines.
+
+## Optional & Extended Docs
+
+- [Full LLM Knowledge Base](https://ultimatethumbnailmaker.pages.dev/llms-full.txt): Complete, concatenated plain-text knowledge base of all guides and technical specifications for deep LLM ingestion.

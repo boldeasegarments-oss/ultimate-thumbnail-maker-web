@@ -1,0 +1,95 @@
+# Ultimate Thumbnail Maker - Complete Knowledge Base
+
+> Comprehensive plain-text documentation and creator guides for Ultimate Thumbnail Maker for Android (package: `com.sk.thumbnailmaker`).
+
+---
+
+## 1. Product Overview & Technical Specifications
+
+- **Software Name:** Ultimate Thumbnail Maker
+- **Platform:** Android (Google Play Store)
+- **Package ID:** `com.sk.thumbnailmaker`
+- **Developer:** Nilesh Jain
+- **Primary Category:** Art & Design / Graphic Design / Video Creator Tools
+- **Pricing Model:** Free (Ad-supported, powered by Google AdMob)
+- **Target Resolution:** 1280x720 pixels (standard YouTube 16:9 ratio)
+- **Official Website:** https://ultimatethumbnailmaker.pages.dev/
+- **Google Play URL:** https://play.google.com/store/apps/details?id=com.sk.thumbnailmaker
+
+---
+
+## 2. Core Features & Capabilities
+
+### Ready-to-Use 16:9 Creator Templates
+The app offers pre-configured layouts across popular video publishing categories:
+- **Gaming:** High-contrast esports, battle royale, survival, and gameplay highlight covers with neon accents and bold gamer typography.
+- **Travel & Vlogs:** Cinematic golden-hour compositions, adventure badges, and scenic framing.
+- **Tech Reviews & Unboxings:** Minimalist studio layouts, gadget spotlight frames, and high-contrast rating stamps.
+- **Podcasts & Interviews:** Dual-host framing, quotation callouts, and episode badge overlays.
+- **Educational Tutorials:** Before/after split layouts, numbered steps, and clean highlight boxes.
+
+### Mobile Typography & Display Styling
+Thumbnails are viewed primarily on mobile screens where total display size is under 2 inches. Ultimate Thumbnail Maker incorporates:
+- Heavy display typefaces optimized for fast readability at small resolutions.
+- Multi-layer color strokes and dark drop shadows to separate text from complex backgrounds.
+- 3D perspective tilt and extruded metallic/neon effects.
+- Gradient fills and customizable text opacity.
+
+### Subject Isolation & Background Removal
+Creators can isolate their headshots, facial expressions, or product photos directly inside the app:
+- Touch-guided cutout tools to trace around human subjects or objects.
+- Smooth edge feathering to blend cutouts into custom studio backgrounds.
+- Zero server uploading: all image cutouts are calculated locally on the user's Android phone.
+
+### Privacy-Preserving On-Device Architecture
+- Personal gallery photos are never uploaded to remote developer cloud storage.
+- Finished designs export directly to the Android device's local gallery (`Pictures` / `DCIM`).
+- No personal user account registration or login required.
+
+---
+
+## 3. 10-Step YouTube Thumbnail Design Workflow
+
+1. **Set the 16:9 Canvas:** Start with the standard 1280x720 resolution (minimum width 640px) to prevent black bars or letterboxing on YouTube.
+2. **Choose an Expressive Focal Point:** Place a clear human reaction face, product shot, or high-action gaming moment on the left or center.
+3. **Isolate the Subject:** Use the cutout tool to remove cluttered original backgrounds and place the subject against high-contrast backdrops.
+4. **Apply Background Dimming / Blur:** Darken or soften the background layer slightly so the foreground subject and text pop immediately.
+5. **Add Maximum 3 to 5 Words:** Write a short, punchy curiosity hook that complements—rather than repeats—the video title.
+6. **Apply Thick Text Strokes & Shadows:** Add a contrasting outer stroke (e.g. white text with dark outline) to ensure readability on any background color.
+7. **Incorporate Visual Anchors:** Place an accent element such as a pointing arrow, circle badge, or game logo to guide the viewer's eye.
+8. **Respect the Safe Zone:** Keep important text and faces away from the lower right-hand corner where the YouTube video duration timestamp is overlaid.
+9. **Perform the Squint Test:** Zoom out or preview the design at 10% scale to confirm the image and text remain instantly legible at mobile thumbnail size.
+10. **Export in High Resolution:** Export as JPEG or PNG directly to device storage and upload via YouTube Studio.
+
+---
+
+## 4. Permissions & Privacy Governance
+
+- `READ_EXTERNAL_STORAGE` / `READ_MEDIA_IMAGES`: Allows the user to select images from their personal device gallery to incorporate into the thumbnail canvas.
+- `WRITE_EXTERNAL_STORAGE`: Allows saving completed thumbnail exports to the device photo library.
+- `CAMERA`: Optional permission used only when the user chooses to snap a new photo directly within the app.
+- `INTERNET` & `ACCESS_NETWORK_STATE`: Required to load remote template packages, stickers, and deliver Google AdMob advertisements.
+- `BILLING`: Google Play Store secure billing for optional ad removal or premium unlocks.
+- `app-ads.txt`: Authorized seller verification published at `https://ultimatethumbnailmaker.pages.dev/app-ads.txt` for AdMob publisher `pub-5679281465772614`.
+
+---
+
+## 5. Frequently Asked Questions (FAQ)
+
+### Does Ultimate Thumbnail Maker force watermarks?
+No. Finished graphics can be exported without obstructive branding overlays, giving creators clean, professional covers for their YouTube channels.
+
+### Does the app work offline?
+Yes. Core editing features, canvas manipulation, local photo imports, and text styling operate fully offline without an active internet connection. Internet connectivity is only needed when downloading new template packs or loading ad banners.
+
+### How does this compare to Canva or desktop Photoshop?
+Unlike Canva or desktop Photoshop, Ultimate Thumbnail Maker is specifically streamlined for mobile creators who need to generate a 16:9 video cover in under 3 minutes on an Android smartphone without complex multi-step subscription menus or heavy desktop hardware.
+
+---
+
+## 6. Official Resources & Contact
+
+- **Official Web Site:** https://ultimatethumbnailmaker.pages.dev/
+- **Google Play:** https://play.google.com/store/apps/details?id=com.sk.thumbnailmaker
+- **Support & Inquiries:** https://ultimatethumbnailmaker.pages.dev/contact/
+- **Privacy Policy:** https://ultimatethumbnailmaker.pages.dev/privacy-policy/
